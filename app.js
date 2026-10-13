@@ -17,7 +17,10 @@ const appNames={messages:'Messages',photos:'Photos',camera:'Camera',blackthorn:'
 const homeApps=['messages','photos','camera','blackthorn','map','notes','calendar','calls'];
 
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
-function wallpaper(c){return c.wallpaper || `assets/wallpaper/${c.theme}.png`}
+function wallpaper(c){
+  if(c.wallpaper) return c.wallpaper;
+  return c.theme === 'florine' ? 'assets/wallpaper/florine.jpg' : `assets/wallpaper/${c.theme}.png`;
+}
 function thumbFor(src){return src.startsWith('data:') ? src : src.replace('/photos/','/thumbs/').replace(/\.[^.]+$/,'.webp')}
 function appButton(id){return `<button class="appIconBtn" data-open="${id}" aria-label="Open ${appNames[id]}"><span class="iconTile ${id}">${icons[id]}</span><span class="label">${appNames[id]}</span></button>`}
 function captureKey(){return `blackthorn-captures-${key}`}
