@@ -19,3 +19,18 @@ De repository bevat een Pages workflow in `.github/workflows/pages.yml`. Bij wij
 
 ## Telefoontest
 Voor het spel: open iedere character-link op een echte telefoon en test Photos, Notes, browser-terug en Camera-toestemming.
+
+
+## Content handoff V2 — changelog
+Updated files:
+- `data.js`: canonical Calendar, Announcements, Directory, Map, Calls and character-specific Messages.
+- `app.js`: story-stage filtering, refresh-safe per-device stage storage and hidden GM stage controls.
+- `styles.css`: sender labels and GM control styling.
+
+Implemented stages:
+`FOUNDERS_MORNING` → `GETTING_READY` → `BALL` → `INCIDENT` → `WEEK1` → `WEEK2` → `WEEK3` → `WEEK4` → `FINALE` → `EPILOGUE`.
+
+Production control:
+Append `#gm` to a character URL to open the hidden stage selector on that device. The selected stage is stored locally for that character and survives refreshes.
+
+Photos, Camera and Notes were left technically intact.
