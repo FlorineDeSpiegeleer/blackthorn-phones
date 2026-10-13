@@ -1,0 +1,9 @@
+Upload instructions:
+1. Unzip this file on your computer.
+2. In GitHub, open the blackthorn-phones repository.
+3. Click Add file > Upload files.
+4. Drag the entire `assets` folder into the upload area.
+5. Also upload/replace `data.js`.
+6. Commit changes.
+
+This package contains the three camera rolls and matching thumbnails.

@@ -1,17 +1,7 @@
 window.BLACKTHORN_DATA = {
   sam: {
-    name: "Sam",
-    theme: "sam",
-    subtitle: "Blackthorn Academy",
-
-    messages: [],
-    calls: [],
-    calendar: [],
-    notes: "",
-    mapLocations: [],
-    announcements: [],
-    directory: [],
-
+    name: "Sam", theme: "sam", subtitle: "Blackthorn Academy",
+    messages: [], calls: [], calendar: [], notes: "", mapLocations: [], announcements: [], directory: [],
     photos: [
       "assets/sam/photos/5ceae8d724020b1a09b7b0a58424f22c.jpg",
       "assets/sam/photos/6b17d7ffd6b4b1ae68f3394f75bd96c4.jpg",
@@ -36,23 +26,11 @@ window.BLACKTHORN_DATA = {
       "assets/sam/photos/download.png",
       "assets/sam/photos/eeeb58e2ac218193add7555112e073e4.jpg"
     ],
-
     locks: {}
   },
-
   maxine: {
-    name: "Maxine",
-    theme: "maxine",
-    subtitle: "Blackthorn Academy",
-
-    messages: [],
-    calls: [],
-    calendar: [],
-    notes: "",
-    mapLocations: [],
-    announcements: [],
-    directory: [],
-
+    name: "Maxine", theme: "maxine", subtitle: "Blackthorn Academy",
+    messages: [], calls: [], calendar: [], notes: "", mapLocations: [], announcements: [], directory: [],
     photos: [
       "assets/maxine/photos/4893c7b3e505750b6fe8576e968da595.jpg",
       "assets/maxine/photos/Autumn-Riverside-Running-Selfie.png",
@@ -67,30 +45,18 @@ window.BLACKTHORN_DATA = {
       "assets/maxine/photos/Gothic-Academy-Champagne-Toast.png",
       "assets/maxine/photos/Gothic-Corridor-Selfie-with-Antique-Books.png",
       "assets/maxine/photos/Gothic-Library-Selfie-by-Candlelight.png",
-      "assets/maxine/photos/Maxine-s-Disco-Night-Celebration.png",
+      "assets/maxine/photos/Maxine’s-Disco-Night-Celebration.png",
       "assets/maxine/photos/Playful-Candlelit-Gothic-Study-Selfie.png",
       "assets/maxine/photos/Sleepy-Morning-After-the-Masquerade.png",
       "assets/maxine/photos/Sunlit-Heart-Shaped-Sand-Selfie.png",
       "assets/maxine/photos/bd6cba66c19e0d4d7dcde2b4541784e2.jpg",
       "assets/maxine/photos/c4560465ecb9448434861676e80f745d.jpg"
     ],
-
     locks: {}
   },
-
   florine: {
-    name: "Florine",
-    theme: "florine",
-    subtitle: "Blackthorn Academy",
-
-    messages: [],
-    calls: [],
-    calendar: [],
-    notes: "",
-    mapLocations: [],
-    announcements: [],
-    directory: [],
-
+    name: "Florine", theme: "florine", subtitle: "Blackthorn Academy",
+    messages: [], calls: [], calendar: [], notes: "", mapLocations: [], announcements: [], directory: [],
     photos: [
       "assets/florine/photos/5625da202d3ecb02310070b5870b656e.jpg",
       "assets/florine/photos/56296263b589b0f03dc34154750689a7.jpg",
@@ -115,7 +81,6 @@ window.BLACKTHORN_DATA = {
       "assets/florine/photos/d324ad256510d9ce9fc7d8005b252a4d.jpg",
       "assets/florine/photos/d975f75192c452d205f1f264b48f7df7.jpg"
     ],
-
     locks: {}
   }
 };
