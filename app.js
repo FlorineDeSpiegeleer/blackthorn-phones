@@ -4,14 +4,14 @@ const key = (qs.get('character') || '').toLowerCase();
 const app = document.getElementById('app');
 
 const icons = {
-  messages:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg>',
-  photos:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.4"/><path d="m6 17 4-4 3 3 2-2 3 3"/></svg>',
-  camera:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h4l1.5-2h5L16 8h4v10H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
-  blackthorn:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M7 7c1.5 0 3-1.5 5-4 2 2.5 3.5 4 5 4M6 11c2 0 4-1 6-4 2 3 4 4 6 4M5 15c2.5 0 5-1 7-4 2 3 4.5 4 7 4M9 21h6"/></svg>',
-  map:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 6 5-2 6 2 5-2v14l-5 2-6-2-5 2zM9 4v14M15 6v14"/><circle cx="15" cy="10" r="1.5"/></svg>',
-  notes:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4"/></svg>',
-  calendar:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="14" rx="2"/><path d="M8 3v6M16 3v6M4 10h16"/></svg>',
-  calls:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4 4.5 6.5c1.5 6.5 6.5 11.5 13 13L20 17l-4-3-2 2c-3-1-5-3-6-6l2-2z"/></svg>'
+  messages:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M9.5 13.5h29v19h-17l-8.5 6v-6H9.5z"/><path d="M14.5 18.5 24 25l9.5-6.5"/><path d="M17 30h14"/></svg>',
+  photos:'<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="10" width="28" height="28" rx="3"/><circle cx="18" cy="18" r="3"/><path d="m13 34 8.5-9 5.5 5 3.5-3.5L36 34"/><path d="M32 13v6M29 16h6"/></svg>',
+  camera:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M9 17h8l2.5-4h9L31 17h8v21H9z"/><circle cx="24" cy="27" r="7"/><circle cx="24" cy="27" r="3.5"/><path d="M14 13h6M34 21h1"/></svg>',
+  blackthorn:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 7v31"/><path d="M15 17c3.2 0 6-3.4 9-8 3 4.6 5.8 8 9 8"/><path d="M12.5 25c4.6 0 8-2.5 11.5-7.5 3.5 5 6.9 7.5 11.5 7.5"/><path d="M10 33c5.4 0 10-2.9 14-8.5 4 5.6 8.6 8.5 14 8.5"/><path d="M18 40h12"/><path d="m24 4 1.1 2.4 2.4 1.1-2.4 1.1L24 11l-1.1-2.4-2.4-1.1 2.4-1.1z"/></svg>',
+  map:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="m9 14 10-4 10 4 10-4v25l-10 4-10-4-10 4z"/><path d="M19 10v25M29 14v25"/><circle cx="29" cy="23" r="4"/><path d="M29 17v2M29 27v2M23 23h2M33 23h2"/></svg>',
+  notes:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M13 9h23v30H13z"/><path d="M18 9v30M23 17h8M23 23h8M23 29h6"/><path d="m11 14 4-2M11 22l4-2M11 30l4-2"/></svg>',
+  calendar:'<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="12" width="28" height="27" rx="3"/><path d="M17 8v8M31 8v8M10 20h28"/><path d="m24 25 1.2 2.5 2.6 1.2-2.6 1.2L24 33l-1.2-3.1-2.6-1.2 2.6-1.2z"/></svg>',
+  calls:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M15 10c-2 1.3-4 4.2-4 7 0 10.7 9.3 20 20 20 2.8 0 5.7-2 7-4l-6.5-6-4 3c-4.7-1.4-8.6-5.3-10-10l3-4z"/><path d="M29 12c4.7 1 7 3.3 8 8M28 18c2 .4 3.6 2 4 4"/></svg>'
 };
 const appNames={messages:'Messages',photos:'Photos',camera:'Camera',blackthorn:'Blackthorn',map:'Map',notes:'Notes',calendar:'Calendar',calls:'Calls'};
 const homeApps=['messages','photos','camera','blackthorn','map','notes','calendar','calls'];
