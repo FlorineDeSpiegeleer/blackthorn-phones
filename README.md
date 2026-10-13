@@ -1,6 +1,6 @@
 # Blackthorn Phones
 
-Mobiele in-game telefoons voor Sam, Maxine en Florine.
+Mobiele in-game telefoons voor Sam, Maxine en Florine. 
 
 ## Vaste spel-links
 - Sam: https://FlorineDeSpiegeleer.github.io/blackthorn-phones/?character=sam
