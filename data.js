@@ -1,0 +1,26 @@
+window.BLACKTHORN_DATA = {
+  sam: {
+    name: 'Sam', theme: 'sam', subtitle: 'Blackthorn Academy',
+    messages: [], calls: [], calendar: [], notes: '', mapLocations: [], announcements: [], directory: [],
+    photos: [
+      'assets/sam/photos/5ceae8d724020b1a09b7b0a58424f22c.jpg','assets/sam/photos/6b17d7ffd6b4b1ae68f3394f75bd96c4.jpg','assets/sam/photos/Autumn-Pups-in-a-Gothic-Courtyard.png','assets/sam/photos/Candlelit-Gothic-Bedroom-Slumber.png','assets/sam/photos/Candlelit-Gothic-Hall-Selfie.png','assets/sam/photos/Candlelit-Gothic-Masquerade-Ball.png','assets/sam/photos/Candlelit-Masquerade-Selfie-Trio.png','assets/sam/photos/Candlelit-Puppies-in-a-Gothic-Retreat.png','assets/sam/photos/Candlelit-Renaissance-Masquerade-Selfie.png','assets/sam/photos/ChatGPT-Image-Oct-13-2026-11_24_14-AM-1.png','assets/sam/photos/ChatGPT-Image-Oct-13-2026-11_24_16-AM-2.png','assets/sam/photos/Cosy-Gothic-Library-Study-Retreat.png','assets/sam/photos/Cozy-Candlelit-Academy-Bedchamber.png','assets/sam/photos/Cozy-Castle-Film-Night-Selfie---Copy-2-.png','assets/sam/photos/Cozy-Gothic-Academy-Study-Circle.png','assets/sam/photos/Sunlit-Heart-Shaped-Sand-Selfie---Copy-2-.png','assets/sam/photos/Victorian-Velvet-Gown-Mirror-Selfie.png','assets/sam/photos/bd6cba66c19e0d4d7dcde2b4541784e2---Copy-2-.jpg','assets/sam/photos/c4560465ecb9448434861676e80f745d---Copy-2-.jpg','assets/sam/photos/download-1-.png','assets/sam/photos/download.png','assets/sam/photos/eeeb58e2ac218193add7555112e073e4.jpg'
+    ],
+    locks: {}
+  },
+  maxine: {
+    name: 'Maxine', theme: 'maxine', subtitle: 'Blackthorn Academy',
+    messages: [], calls: [], calendar: [], notes: '', mapLocations: [], announcements: [], directory: [],
+    photos: [
+      'assets/maxine/photos/4893c7b3e505750b6fe8576e968da595.jpg','assets/maxine/photos/Autumn-Riverside-Running-Selfie.png','assets/maxine/photos/Candlelit-Masquerade-Celebration.png','assets/maxine/photos/Candlelit-Masquerade-Dessert-Table.png','assets/maxine/photos/Candlelit-Masquerade-Selfie-Trio.png','assets/maxine/photos/Candlelit-Masquerade-in-a-Gothic-Hall.png','assets/maxine/photos/Candlelit-Truffle-Pasta-Feast.png','assets/maxine/photos/Cosy-Gothic-Library-Study-Retreat.png','assets/maxine/photos/Cozy-Castle-Film-Night-Selfie.png','assets/maxine/photos/Golden-Hour-at-the-Gothic-Academy.png','assets/maxine/photos/Gothic-Academy-Champagne-Toast.png','assets/maxine/photos/Gothic-Corridor-Selfie-with-Antique-Books.png','assets/maxine/photos/Gothic-Library-Selfie-by-Candlelight.png','assets/maxine/photos/Maxine-s-Disco-Night-Celebration.png','assets/maxine/photos/Playful-Candlelit-Gothic-Study-Selfie.png','assets/maxine/photos/Sleepy-Morning-After-the-Masquerade.png','assets/maxine/photos/Sunlit-Heart-Shaped-Sand-Selfie.png','assets/maxine/photos/bd6cba66c19e0d4d7dcde2b4541784e2.jpg','assets/maxine/photos/c4560465ecb9448434861676e80f745d.jpg'
+    ],
+    locks: {}
+  },
+  florine: {
+    name: 'Florine', theme: 'florine', subtitle: 'Blackthorn Academy',
+    messages: [], calls: [], calendar: [], notes: '', mapLocations: [], announcements: [], directory: [],
+    photos: [
+      'assets/florine/photos/5625da202d3ecb02310070b5870b656e.jpg','assets/florine/photos/56296263b589b0f03dc34154750689a7.jpg','assets/florine/photos/81a164ce5888add6b37139a5e8f50b3c.jpg','assets/florine/photos/99ae257d15897d38c7a27dd03abcbd38.jpg','assets/florine/photos/Candlelit-Gilded-Room-Portrait.png','assets/florine/photos/Candlelit-Gothic-Masquerade-Ball-1-.png','assets/florine/photos/Candlelit-Masquerade-Selfie-Trio.png','assets/florine/photos/ChatGPT-Image-Oct-13-2026-11_24_24-AM-3.png','assets/florine/photos/Cosy-Gothic-Library-Study-Retreat.png','assets/florine/photos/Cozy-Castle-Film-Night-Selfie---Copy.png','assets/florine/photos/Golden-Academy-Equestrian-Ride.png','assets/florine/photos/Golden-Equestrian-Leap-at-Castle-Academy.png','assets/florine/photos/Golden-Hour-Academy-Rider.png','assets/florine/photos/Golden-Hour-at-the-Gothic-Academy---Copy.png','assets/florine/photos/Gothic-Courtyard-Horse-at-Sunset.png','assets/florine/photos/Gothic-Hall-Croissant-Breakfast.png','assets/florine/photos/Rainy-Gothic-Manor-Arrival.png','assets/florine/photos/Sunlit-Heart-Shaped-Sand-Selfie---Copy.png','assets/florine/photos/bd6cba66c19e0d4d7dcde2b4541784e2---Copy.jpg','assets/florine/photos/c4560465ecb9448434861676e80f745d---Copy.jpg','assets/florine/photos/d324ad256510d9ce9fc7d8005b252a4d.jpg','assets/florine/photos/d975f75192c452d205f1f264b48f7df7.jpg'
+    ],
+    locks: {}
+  }
+};
