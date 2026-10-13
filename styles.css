@@ -104,3 +104,8 @@ button,input,textarea{font:inherit} button{touch-action:manipulation}
 .mapRow{width:100%;display:grid;grid-template-columns:18px 1fr auto;gap:11px;align-items:center;border:0;border-bottom:1px solid var(--line);padding:13px 14px;background:transparent;text-align:left;color:inherit}.mapRow:last-child{border-bottom:0}.mapDot{width:11px;height:11px;border-radius:50%;background:var(--accent-2);box-shadow:0 0 0 4px rgba(var(--accent-rgb),.07)}.mapRow b{display:block}.mapRow small{display:block;font:12px/1.35 var(--sans);color:var(--muted);margin-top:2px}.event p{margin:7px 0 0;font:13px/1.4 var(--sans);color:var(--muted)}
 .lockGlyph{width:46px;height:46px;margin:0 auto 7px;border-radius:50%;display:grid;place-items:center;background:rgba(var(--accent-rgb),.1);color:var(--accent);font-size:21px}
 @supports (height:100svh){.phone,.home,.screen,.cameraScreen,.characterPicker{min-height:100svh}}
+
+.bubbleSender{display:block;margin:0 0 4px;font:700 10px var(--sans);letter-spacing:.04em;opacity:.65}
+.gmStages{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0 18px}
+.gmStage{appearance:none;border:1px solid var(--line);background:#fffaf3;color:var(--ink);border-radius:14px;padding:12px 10px;font:700 12px var(--sans);letter-spacing:.03em;box-shadow:0 5px 14px rgba(58,40,25,.05)}
+.gmStage.active{background:var(--accent);color:#fff;border-color:var(--accent)}
