@@ -68,11 +68,13 @@ function privateReadyCard(){
   const active=unlockedFlows().some(id=>{const r=BUILD.phoneFlow.find(x=>x.flow_id===id);return r&&r.character===player.name&&r.window===w});
   if(!active)return '';
   const ready=localStorage.getItem('bt-ready-'+w+'-'+key)==='1';
-  return `<div class="readyCard"><b>${ready?'Klaar ✓':'Privévenster '+esc(w)}</b><p>${ready?'Je telefoon blijft bruikbaar terwijl de anderen afronden.':'Rond je huidige gesprek af en markeer daarna dat je klaar bent.'}</p><button id="readyBtn">${ready?'Niet meer klaar':'Ik ben klaar'}</button></div>`;
+  const waiting=ready?`<div class="waitingTools"><small>TERWIJL JE WACHT · geen bewijs-effect</small><button data-wait-app="dossier">Bekijk dossier</button><button data-wait-app="notes">Maak notitie</button><button data-wait-app="photos">Bekijk foto's</button></div>`:'';
+  return `<div class="readyCard"><b>${ready?'Klaar ✓':'Privévenster '+esc(w)}</b><p>${ready?'Je telefoon blijft bruikbaar terwijl de anderen afronden.':'Rond je huidige gesprek af en markeer daarna dat je klaar bent.'}</p><button id="readyBtn">${ready?'Niet meer klaar':'Ik ben klaar'}</button>${waiting}</div>`;
 }
 function bindWindowControls(){
   document.querySelectorAll('[data-w6]').forEach(b=>b.onclick=()=>{const st=state();st.w6_route=b.dataset.w6;saveState(st);syncChannel?.postMessage({type:'route'});renderMessages()});
   const rb=document.getElementById('readyBtn');if(rb)rb.onclick=()=>{const w=activeWindow(),k='bt-ready-'+w+'-'+key;localStorage.setItem(k,localStorage.getItem(k)==='1'?'0':'1');syncChannel?.postMessage({type:'ready',window:w});renderMessages()};
+  document.querySelectorAll('[data-wait-app]').forEach(b=>b.onclick=()=>renderApp(b.dataset.waitApp));
 }
 function renderMessages(){
   const groups=new Map();visibleRows().forEach(r=>{if(!groups.has(r.thread))groups.set(r.thread,[]);groups.get(r.thread).push(r)});
@@ -95,8 +97,10 @@ function renderThread(name){
     localStorage.setItem(choiceKey(r.flow_id),b.dataset.i);
     if(r.flow_id==='P025')st.hazard_choice=label.startsWith('WACHT')?'A':label.startsWith('BLIJF')?'B':'C';
     if(r.flow_id==='P036'){st.b23_route=label==='THEO'?'Theo':label==='ADRIAN'?'Adrian':'none';syncChannel?.postMessage({type:'route'});}
-    if((r.state_write||'').includes('theo_engagement+=1'))st.theo_engagement=Number(st.theo_engagement||0)+1;
-    if((r.state_write||'').includes('adrian_engagement+=1'))st.adrian_engagement=Number(st.adrian_engagement||0)+1;
+    const scoreTheo=new Set(['P013','P016','P035']);
+    const scoreAdrian=new Set(['P023','P032','P042']);
+    if(idx===1&&scoreTheo.has(r.flow_id))st.theo_engagement=Number(st.theo_engagement||0)+1;
+    if(idx===1&&scoreAdrian.has(r.flow_id))st.adrian_engagement=Number(st.adrian_engagement||0)+1;
     saveState(st);renderThread(name);
   });bindWindowControls();bindTop();bindDebug();
 }
