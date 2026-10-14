@@ -23,9 +23,12 @@ function finish(marker,msg,onComplete){
 function button(marker,ready){
   if(!marker)return '';
   if(done(marker))return `<button class="puzzleButton done" data-puzzle="${esc(marker)}">PUZZLE VOLTOOID ✓</button>`;
+  if(marker==='P4_READY'&&!ready&&!inspectionComplete())return '<button class="puzzleButton" data-mask-inspection>START OBJECTINSPECTIE</button>';
   return `<button class="puzzleButton" data-puzzle="${esc(marker)}" ${ready?'':'disabled'}>${ready?'START '+esc(marker.replace('_READY','')):'DOSSIER NOG ONVOLLEDIG'}</button>`;
 }
 function bind(marker,ready,onComplete){
+  const inspect=document.querySelector('[data-mask-inspection]');
+  if(inspect){inspect.onclick=()=>openMaskInspection(onComplete);return}
   const b=document.querySelector('[data-puzzle]');
   if(!b)return;
   b.onclick=()=>{if(ready)open(marker,onComplete)};
