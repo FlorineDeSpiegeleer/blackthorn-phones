@@ -83,6 +83,7 @@ window.loadBlackthornBuild=async function(){
     if(r.flow_id==='P004B') r.opening_text='Het strijkensemble zet een dans in. Alexander biedt zijn hand. “Dit is geen Guard-opdracht.”';
     if(r.flow_id==='P043T3'){r.intent_1='DOE ALSOF ER NIETS GEBEURDE';r.visible_timestamp='even later';}
     if(r.flow_id==='P043A3') r.visible_timestamp='even later';
+    if(r.flow_id==='P011' && r.reaction_1) r.reaction_1='Omdat hij luid was.';
     return r;
   });
   return {...BLACKTHORN_STATIC,phoneFlow:rows};
