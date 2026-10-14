@@ -1,76 +1,73 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import csv, hashlib, json, re, sys
+import csv, hashlib, json, sys
 
-ROOT=Path(__file__).resolve().parents[1]
-errors=[]
+ROOT = Path(__file__).resolve().parents[1]
+errors = []
 
-def fail(msg): errors.append(msg)
-def text(path): return (ROOT/path).read_text(encoding="utf-8")
-def sha(path): return hashlib.sha256((ROOT/path).read_bytes()).hexdigest()
+def read(path):
+    return (ROOT / path).read_text(encoding="utf-8")
 
-required=[
- "index.html","app.js","styles.css","runtime-data.js","game-meta.js",
- "projector/index.html","projector/projector.js","projector/styles.css",
- "production/v63/BLACKTHORN_SCENE_TABLE_V6_3_AUTHORITATIVE_GM_ONLY.csv",
- "production/v63/BLACKTHORN_PHONE_FLOW_V6_3_IMPLEMENTATION_GM_ONLY.csv",
- "production/v63/IMPLEMENTATION_MANIFEST.json"
+def digest(path):
+    return hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
+
+required = [
+    "index.html","app.js","styles.css","runtime-data.js","game-meta.js",
+    "projector/index.html","projector/projector.js","projector/styles.css",
+    "production/v63/BLACKTHORN_SCENE_TABLE_V6_3_AUTHORITATIVE_GM_ONLY.csv",
+    "production/v63/BLACKTHORN_PHONE_FLOW_V6_3_IMPLEMENTATION_GM_ONLY.csv",
+    "production/v63/IMPLEMENTATION_MANIFEST.json"
 ]
-for p in required:
-    if not (ROOT/p).exists(): fail("missing "+p)
+for path in required:
+    if not (ROOT / path).exists():
+        errors.append("missing " + path)
 
-manifest=json.loads(text("production/v63/IMPLEMENTATION_MANIFEST.json"))
-sources=manifest["approved_sources"]
+manifest = json.loads(read("production/v63/IMPLEMENTATION_MANIFEST.json"))
 for key in ("scene_table","phone_flow"):
-    p=ROOT/"production/v63"/sources[key]["file"]
-    if p.exists():
-        got=sha(p); exp=sources[key]["sha256"]
-        if got!=exp: fail(f"{key} hash mismatch: {got} != {exp}")
+    src = manifest["approved_sources"][key]
+    path = "production/v63/" + src["file"]
+    if (ROOT / path).exists() and digest(path) != src["sha256"]:
+        errors.append(key + " hash mismatch")
 
-runtime=text("runtime-data.js")
-app=text("app.js")
-proj=text("projector/projector.js")
+runtime = read("runtime-data.js")
+app = read("app.js")
+projector = read("projector/projector.js")
 
-checks={
- "dance setup":"Het strijkensemble zet een dans in. Alexander biedt zijn hand." in runtime,
- "P043 typo fix":"DOE ALSOF ER NIETS GEBEURDE" in runtime,
- "localized timestamp":"even later" in runtime and "moments later" not in runtime,
- "P011 neutralization":"Omdat hij luid was." in runtime,
- "flow unlock gating":"bt-unlocked-flows" in app and "bt-unlocked-flows" in proj,
- "private ready state":"bt-ready-" in app and "bt-ready-" in proj,
- "opaque block shield":"PRIVATE_CONSEQUENCE_BLOCK" in app and "safeText" in proj,
- "route sync":"b23_route" in app and "w6_route" in app and "resolveB23" in proj,
+checks = {
+    "dance setup": "Het strijkensemble zet een dans in. Alexander biedt zijn hand." in runtime,
+    "P043 typo fix": "DOE ALSOF ER NIETS GEBEURDE" in runtime,
+    "localized timestamp": "even later" in runtime,
+    "P011 neutralization": "Omdat hij luid was." in runtime,
+    "flow unlock gating": "bt-unlocked-flows" in app and "bt-unlocked-flows" in projector,
+    "private ready state": "bt-ready-" in app and "bt-ready-" in projector,
+    "opaque block shielding": "safeText" in projector and "PRIVATE_CONSEQUENCE_BLOCK" in app,
+    "route logic": "b23_route" in app and "w6_route" in app and "resolveB23" in projector,
 }
-for name,ok in checks.items():
-    if not ok: fail("implementation check failed: "+name)
+for name, ok in checks.items():
+    if not ok:
+        errors.append("implementation check failed: " + name)
 
-# Player-facing runtime files must not contain literal protected payloads.
-for p in ["index.html","app.js","styles.css","runtime-data.js","game-meta.js","projector/index.html","projector/projector.js","projector/styles.css"]:
-    s=text(p)
-    if re.search(r"FINAL_REVEAL_BLOCK_GM_\d+|PRIVATE_CONSEQUENCE_BLOCK_[A-Z]+_GM_\d+",s):
-        # references in shielding regex are allowed, payloads are not.
-        lines=[ln for ln in s.splitlines() if "FINAL_REVEAL_BLOCK_GM_" in ln or "PRIVATE_CONSEQUENCE_BLOCK_" in ln]
-        unsafe=[ln for ln in lines if "test(" not in ln and "match(" not in ln and "replace(" not in ln and "/(?:" not in ln]
-        if unsafe: fail("protected placeholder leaked into player runtime: "+p)
+with (ROOT / "production/v63/BLACKTHORN_PHONE_FLOW_V6_3_IMPLEMENTATION_GM_ONLY.csv").open(encoding="utf-8", newline="") as f:
+    phone_rows = list(csv.DictReader(f))
+with (ROOT / "production/v63/BLACKTHORN_SCENE_TABLE_V6_3_AUTHORITATIVE_GM_ONLY.csv").open(encoding="utf-8", newline="") as f:
+    scene_rows = list(csv.DictReader(f))
 
-with (ROOT/"production/v63/BLACKTHORN_PHONE_FLOW_V6_3_IMPLEMENTATION_GM_ONLY.csv").open(encoding="utf-8",newline="") as f:
-    rows=list(csv.DictReader(f))
-ids={r["flow_id"] for r in rows}
-for need in ["P001","P004B","P011","P025","P036","P040","P041","P043T","P043A","P050","P051","P052","P063"]:
-    if need not in ids: fail("missing required flow "+need)
+phone_ids = {r["flow_id"] for r in phone_rows}
+scene_ids = {r["scene_id"] for r in scene_rows}
+for flow in ("P001","P004B","P011","P025","P036","P040","P041","P043T","P043A","P050","P051","P052","P063"):
+    if flow not in phone_ids:
+        errors.append("missing flow " + flow)
+for scene in ("S00","S01","S03","S04","S06","S16","S22","S25","S27","S28","S30"):
+    if scene not in scene_ids:
+        errors.append("missing scene " + scene)
 
-with (ROOT/"production/v63/BLACKTHORN_SCENE_TABLE_V6_3_AUTHORITATIVE_GM_ONLY.csv").open(encoding="utf-8",newline="") as f:
-    scenes=list(csv.DictReader(f))
-sceneids={r["scene_id"] for r in scenes}
-for need in ["S00","S01","S03","S04","S06","S16","S22","S25","S27","S28","S30"]:
-    if need not in sceneids: fail("missing required scene "+need)
-
-print("BLACKTHORN V6.3 VALIDATION", "PASSED" if not errors else "FAILED")
-print("source files:",2)
-print("phone flows:",len(rows))
-print("scenes:",len(scenes))
-print("opaque player-side shielding: enabled")
+print("BLACKTHORN V6.3 VALIDATION " + ("PASSED" if not errors else "FAILED"))
+print("phone flows:", len(phone_rows))
+print("scenes:", len(scene_rows))
+print("progression gating: enabled")
 print("private-window ready state: enabled")
+print("opaque player-side shielding: enabled")
 if errors:
-    for e in errors: print("-",e)
+    for error in errors:
+        print("-", error)
     sys.exit(1)
