@@ -1,0 +1,33 @@
+{
+  "package": "BLACKTHORN V6.3 IMPLEMENTATION",
+  "status": "WORK BRANCH - DO NOT MERGE",
+  "branch": "blackthorn-v2-work",
+  "player_safe_entry": "index.html",
+  "projector_entry": "projector/index.html",
+  "approved_sources": {
+    "scene_table": {
+      "file": "BLACKTHORN_SCENE_TABLE_V6_3_AUTHORITATIVE_GM_ONLY.csv",
+      "sha256": "7759d987a0fbf100c60fd0bccc736d66ac5cf934b21363505df8dc5b517b3b11"
+    },
+    "phone_flow": {
+      "file": "BLACKTHORN_PHONE_FLOW_V6_3_IMPLEMENTATION_GM_ONLY.csv",
+      "sha256": "d821d36e673d671067f4d791221335765765f54a4169684a94a79308f03b9038"
+    }
+  },
+  "implementation_patches": [
+    "P004B player-visible dance setup",
+    "P043T3 typo corrected at runtime",
+    "P043T3/P043A3 timestamp localized to even later",
+    "P011 reaction neutralized to Omdat hij luid was.",
+    "private phone flows unlock only when projector progression reaches them",
+    "opaque GM finale/consequence placeholders never render player-side",
+    "private windows expose explicit ready state",
+    "Maxine B23/W6 route logic uses engagement counters without Theo bias"
+  ],
+  "technical_lock_pending": [
+    "protected opaque finale/consequence source linkage and hashes",
+    "final normalized asset pass",
+    "cross-device synchronization beyond same-browser localStorage/BroadcastChannel",
+    "final end-to-end smoke test"
+  ]
+}
