@@ -18,6 +18,7 @@ jobs:
           node --check runtime-data.js
           node --check game-meta.js
           node --check asset-map.js
+          node --check accusation.js
           node --check projector/projector.js
           node --check projector/puzzle-data.js
           node --check projector/puzzles.js
