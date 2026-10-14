@@ -96,10 +96,123 @@ function renderCalls(c){
   shell('Calls',`<div class="listCard">${calls.map(x=>`<div class="callRow"><div class="callIcon">${icons.calls}</div><div class="callMeta"><b>${esc(x.name)}</b><span>${esc(x.type||'Call')}</span></div><time>${esc(x.time||'')}</time></div>`).join('')}</div>`);
 }
 
+const CALENDAR_WEEKS = [
+  {id:'founders',label:'Founders Week',range:'6–12 OCT',days:[
+    {dow:'MON',day:'06'},{dow:'TUE',day:'07'},{dow:'WED',day:'08'},{dow:'THU',day:'09'},{dow:'FRI',day:'10'},{dow:'SAT',day:'11'},{dow:'SUN',day:'12'}
+  ]},
+  {id:'week2',label:'Second Week',range:'13–19 OCT',days:[
+    {dow:'MON',day:'13'},{dow:'TUE',day:'14'},{dow:'WED',day:'15'},{dow:'THU',day:'16'},{dow:'FRI',day:'17'},{dow:'SAT',day:'18'},{dow:'SUN',day:'19'}
+  ]},
+  {id:'week3',label:'Third Week',range:'20–26 OCT',days:[
+    {dow:'MON',day:'20'},{dow:'TUE',day:'21'},{dow:'WED',day:'22'},{dow:'THU',day:'23'},{dow:'FRI',day:'24'},{dow:'SAT',day:'25'},{dow:'SUN',day:'26'}
+  ]},
+  {id:'week4',label:'Final Week',range:'27 OCT – 2 NOV',days:[
+    {dow:'MON',day:'27'},{dow:'TUE',day:'28'},{dow:'WED',day:'29'},{dow:'THU',day:'30'},{dow:'FRI',day:'31'},{dow:'SAT',day:'01'},{dow:'SUN',day:'02'}
+  ]}
+];
+
+function currentCalendarWeekIndex(){
+  const s=currentStage();
+  if(['FOUNDERS_MORNING','GETTING_READY','BALL','INCIDENT','WEEK1'].includes(s)) return 0;
+  if(s==='WEEK2') return 1;
+  if(s==='WEEK3') return 2;
+  return 3;
+}
+function calendarDayKey(e){
+  const m=String(e.date||'').match(/(?:MON|TUE|WED|THU|FRI|SAT|SUN)\s+(\d{2})\s+([A-Z]{3})/);
+  if(!m) return '';
+  return `${m[1]}-${m[2]}`;
+}
+function weekDayKey(day,weekIndex){
+  const month=(weekIndex===3 && ['01','02'].includes(day.day))?'NOV':'OCT';
+  return `${day.day}-${month}`;
+}
+function latestVisibleDayIndex(week,weekIndex,events){
+  let latest=0;
+  week.days.forEach((d,i)=>{
+    if(events.some(e=>calendarDayKey(e)===weekDayKey(d,weekIndex))) latest=i;
+  });
+  return latest;
+}
+
 function renderCalendar(c){
   const events=visibleItems(c.calendar);
   if(!events.length) return shell('Calendar',empty('Nothing scheduled','No visible events are scheduled.','calendar'));
-  shell('Calendar',`<div class="calendarList">${events.map(e=>`<div class="card day"><div class="dateBox"><small>${esc(e.month||'')}</small><b>${esc(e.day||'')}</b></div><div class="event"><strong>${esc(e.title)}</strong><span>${[e.time,e.location].filter(Boolean).map(esc).join(' · ')}</span>${e.note?`<p>${esc(e.note)}</p>`:''}</div></div>`).join('')}</div>`);
+
+  let weekIndex=Number(sessionStorage.getItem(`blackthorn-calendar-week-${key}`));
+  const maxWeek=currentCalendarWeekIndex();
+  if(!Number.isInteger(weekIndex) || weekIndex<0 || weekIndex>maxWeek) weekIndex=maxWeek;
+
+  const week=CALENDAR_WEEKS[weekIndex];
+  let dayIndex=Number(sessionStorage.getItem(`blackthorn-calendar-day-${key}-${week.id}`));
+  if(!Number.isInteger(dayIndex) || dayIndex<0 || dayIndex>6){
+    dayIndex=latestVisibleDayIndex(week,weekIndex,events);
+  }
+
+  const selected=week.days[dayIndex];
+  const selectedKey=weekDayKey(selected,weekIndex);
+  const dayEvents=events.filter(e=>calendarDayKey(e)===selectedKey);
+  const weekEvents=events.filter(e=>week.days.some(d=>weekDayKey(d,weekIndex)===calendarDayKey(e)));
+
+  const dayStrip=week.days.map((d,i)=>{
+    const k=weekDayKey(d,weekIndex);
+    const count=events.filter(e=>calendarDayKey(e)===k).length;
+    return `<button class="weekDay ${i===dayIndex?'active':''} ${count?'hasEvents':''}" data-day="${i}">
+      <span class="weekDow">${d.dow}</span>
+      <span class="weekNum">${d.day}</span>
+      <span class="weekDots">${count?'<i></i>':''}</span>
+    </button>`;
+  }).join('');
+
+  const schedule=dayEvents.length ? dayEvents.map((e,i)=>{
+    const isSpecial=/Veiled Moon|Memorial|Summons|Processional|Reinspection/i.test(e.title||'');
+    return `<article class="weekEvent ${isSpecial?'special':''}">
+      <div class="weekTime">${esc(e.time||'')}</div>
+      <div class="weekEventLine"><span></span></div>
+      <div class="weekEventBody">
+        <h3>${esc(e.title)}</h3>
+        <div class="weekMeta">${esc(e.location||'')}</div>
+        ${e.note?`<p>${esc(e.note)}</p>`:''}
+      </div>
+    </article>`;
+  }).join('') : `<div class="calendarFree"><span>✦</span><h3>No scheduled classes</h3><p>This day is currently clear.</p></div>`;
+
+  const visibleCount=weekEvents.length;
+  const navLeft=weekIndex>0 ? '<button class="weekNav" data-week="-1" aria-label="Previous week">‹</button>' : '<span class="weekNav ghost"></span>';
+  const navRight=weekIndex<maxWeek ? '<button class="weekNav" data-week="1" aria-label="Next week">›</button>' : '<span class="weekNav ghost"></span>';
+
+  shell('Calendar',`
+    <section class="weekCalendar">
+      <div class="weekHeader">
+        ${navLeft}
+        <div class="weekTitle">
+          <span class="weekKicker">BLACKTHORN ACADEMY</span>
+          <h2>${week.label}</h2>
+          <small>${week.range} · ${visibleCount} scheduled</small>
+        </div>
+        ${navRight}
+      </div>
+      <div class="weekStrip">${dayStrip}</div>
+      <div class="dayHeading">
+        <div>
+          <span>${selected.dow}</span>
+          <h3>${selected.day} ${weekIndex===3 && ['01','02'].includes(selected.day)?'NOV':'OCT'}</h3>
+        </div>
+        <div class="dayHeadingMark">✦</div>
+      </div>
+      <div class="weekSchedule">${schedule}</div>
+    </section>
+  `,`Week ${weekIndex+1}`);
+
+  app.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>{
+    sessionStorage.setItem(`blackthorn-calendar-day-${key}-${week.id}`,b.dataset.day);
+    renderCalendar(c);
+  });
+  app.querySelectorAll('[data-week]').forEach(b=>b.onclick=()=>{
+    const next=Math.max(0,Math.min(maxWeek,weekIndex+Number(b.dataset.week)));
+    sessionStorage.setItem(`blackthorn-calendar-week-${key}`,String(next));
+    renderCalendar(c);
+  });
 }
 
 function renderMap(c){
