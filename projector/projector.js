@@ -18,40 +18,7 @@ const BEGIN_DETAILS={
  }
 };
 const REQUIRED_INTERACTIONS={S01:['UITNODIGINGEN'],S03:['KAMERHOTSPOTS']};
-const IMAGES={
- S00:'assets/florine/photos/Rainy-Gothic-Manor-Arrival.png',
- S01:'assets/sam/photos/Cozy-Candlelit-Academy-Bedchamber.png',
- S02:'assets/sam/photos/Cosy-Gothic-Library-Study-Retreat.png',
- S03:'assets/sam/photos/Cozy-Candlelit-Academy-Bedchamber.png',
- S04:'assets/florine/photos/Rainy-Gothic-Manor-Arrival.png',
- S05:'assets/sam/photos/Candlelit-Gothic-Masquerade-Ball.png',
- S06:'assets/maxine/photos/Gothic-Corridor-Selfie-with-Antique-Books.png',
- S06A:'assets/sam/photos/Candlelit-Gothic-Hall-Selfie.png',
- S07:'assets/sam/photos/Cozy-Candlelit-Academy-Bedchamber.png',
- S08:'assets/sam/photos/Candlelit-Gothic-Hall-Selfie.png',
- S10:'assets/sam/photos/Cosy-Gothic-Library-Study-Retreat.png',
- S11:'assets/florine/photos/Golden-Hour-at-the-Gothic-Academy---Copy.png',
- S12A:'assets/maxine/photos/Gothic-Corridor-Selfie-with-Antique-Books.png',
- S12B:'assets/maxine/photos/Cosy-Gothic-Library-Study-Retreat.png',
- S12C:'assets/maxine/photos/Gothic-Corridor-Selfie-with-Antique-Books.png',
- S13:'assets/sam/photos/Cosy-Gothic-Library-Study-Retreat.png',
- S14:'assets/maxine/photos/Gothic-Corridor-Selfie-with-Antique-Books.png',
- S16:'assets/florine/photos/Rainy-Gothic-Manor-Arrival.png',
- S16A:'assets/florine/photos/Rainy-Gothic-Manor-Arrival.png',
- S16B:'assets/florine/photos/Rainy-Gothic-Manor-Arrival.png',
- S17:'assets/sam/photos/Cozy-Candlelit-Academy-Bedchamber.png',
- S18:'assets/sam/photos/Cosy-Gothic-Library-Study-Retreat.png',
- S20:'assets/maxine/photos/Gothic-Corridor-Selfie-with-Antique-Books.png',
- S22:'assets/maxine/photos/Gothic-Corridor-Selfie-with-Antique-Books.png',
- S23:'assets/maxine/photos/Gothic-Corridor-Selfie-with-Antique-Books.png',
- S24A:'assets/maxine/photos/Gothic-Corridor-Selfie-with-Antique-Books.png',
- S24B:'assets/florine/photos/Rainy-Gothic-Manor-Arrival.png',
- S24C:'assets/sam/photos/Cosy-Gothic-Library-Study-Retreat.png',
- S26:'assets/maxine/photos/Gothic-Corridor-Selfie-with-Antique-Books.png',
- S27:'assets/maxine/photos/Gothic-Corridor-Selfie-with-Antique-Books.png',
- S29:'assets/florine/photos/Golden-Hour-at-the-Gothic-Academy---Copy.png',
- S30:'assets/sam/photos/Cozy-Candlelit-Academy-Bedchamber.png'
-};
+const IMAGES=(window.BLACKTHORN_ASSETS&&window.BLACKTHORN_ASSETS.scenes)||{};
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
 function split(s){
   const v=String(s||'');
