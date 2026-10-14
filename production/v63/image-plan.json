@@ -1,0 +1,98 @@
+{
+  "version": "V6.3",
+  "status": "visual-library-mapping",
+  "note": "These filenames refer to the user-supplied visual library. Upload/rename into projector/assets in a later asset pass without changing story logic.",
+  "scenes": {
+    "S00": [
+      "blackthorn_academy_exterior_rainy_evening.png"
+    ],
+    "S01": [
+      "guest_suite_getting_ready(1).png",
+      "Girls dressing room(1).png"
+    ],
+    "S03": [
+      "Candlelit Masquerade Dressing Room(1).png",
+      "Candlelit Masquerade Dressing Room Selfie (1)(1).png",
+      "Candlelit Masquerade Dressing Room Selfie(3).png"
+    ],
+    "S04": [
+      "3C. Reception Arcade  Late Arrival Checkpoint(2).png",
+      "Masquerade Ball Entrance Trio(1).png"
+    ],
+    "S05": [
+      "3B. Grand Ballroom.png",
+      "Candlelit Masquerade at the Gothic Academy(1).png",
+      "Opulent Palace Masquerade Ball(1).png",
+      "Founders’ Week Gothic Academy Hall(1).png"
+    ],
+    "S06": [
+      "observatory_gallery_night.png"
+    ],
+    "S08": [
+      "3H. Great Hall  Lockdown Gathering Space.png"
+    ],
+    "S10": [
+      "blackthorn_library_evening.png",
+      "3G. Library Nook  Quiet Reading Corner.png"
+    ],
+    "S12C": [
+      "3D. East Gallery.png",
+      "east_gallery_evening.png"
+    ],
+    "S14": [
+      "council_room_blackthorn.png"
+    ],
+    "S16": [
+      "maintenance_stair.png",
+      "Gothic Stairwell Between Two Corridors(1).png"
+    ],
+    "S17": [
+      "Vintage Apothecary Examination Room(2).png"
+    ],
+    "S20": [
+      "library_annex_archive_room.png",
+      "Gothic Scholar’s Archive Study(2).png"
+    ],
+    "S22": [
+      "Warmly Lit Academy Service Corridor(2).png"
+    ],
+    "S24C": [
+      "Gothic Conservation Laboratory Workshop(1).png"
+    ],
+    "S30": [
+      "guest_suite_getting_ready(1).png",
+      "Gothic Masquerade Selfie Trio(2).png",
+      "Candlelit Victorian Ballroom Selfie(4).png"
+    ]
+  },
+  "characterAssets": {
+    "Florine": [
+      "4C. Florine official portrait(1).png",
+      "Florine(5).png",
+      "Florine2(6).png",
+      "Florine3(6).png"
+    ],
+    "Alexander": [
+      "LI_Florine(2).png",
+      "LI_Florine2(1).png"
+    ],
+    "Sam": [
+      "Sam(7).png",
+      "Sam2(5).png"
+    ],
+    "Nate": [
+      "LI_Sam(1).png"
+    ],
+    "Maxine": [
+      "Maxine(6).png",
+      "Maxine_portrait.png",
+      "Maxine2(20261014-090958).png"
+    ],
+    "Theo": [
+      "LI_Maxine(2).png"
+    ],
+    "Adrian": [
+      "LI_Maxine2(1).png"
+    ]
+  }
+}
