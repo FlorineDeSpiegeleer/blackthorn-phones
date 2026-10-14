@@ -2,6 +2,22 @@ const META=window.BLACKTHORN_META||{caseEvidence:{},evidenceLabels:{},puzzleGate
 const root=document.getElementById('projector');
 const syncChannel=('BroadcastChannel' in window)?new BroadcastChannel('blackthorn-v63-sync'):null;
 let SCENES=[],i=Number(localStorage.getItem('bt-proj-scene')||0);
+const BEGIN_DETAILS={
+ S01:{
+  UITNODIGINGEN:{title:'Drie persoonlijke uitnodigingen',body:'Drie crèmekleurige kaarten dragen elk een eigen naam. Onderaan staat: Persoonlijke uitnodiging vereist bij de Grand Stair.'},
+  PROGRAMMA:{title:'Foundersweek-programma',body:'Ontbijt, lessen en avondprogramma staan op één gevouwen kaart. De Night of the Veiled Moon begint vanavond in de Grand Hall.'},
+  KAART:{title:'Campuskaart',body:'De publieke studentenroutes zijn duidelijk gemarkeerd. Service-, Council- en archiefroutes staan niet als gewone studentenroute aangegeven.'},
+  MASKERDOZEN:{title:'Maskerdozen',body:'Drie gesloten dozen liggen naast de kledinghoezen. Elke doos is al op naam gelabeld.'},
+  RAAM:{title:'Suite 417 — raam',body:'Regen hangt boven de binnenplaats. Beneden worden vlaggen en lantaarns voor Foundersweek vastgezet.'},
+  GROEPSFOTO:{title:'Groepsfoto',body:'Een foto van jullie drie staat tussen boeken en losse papieren. Geen dossierstuk. Gewoon van jullie.'}
+ },
+ S03:{
+  KAMERHOTSPOTS:{title:'Suite 417',body:'Kledinghoezen open. Maskerdozen op tafel. De Academy-klok blijft hier zichtbaar.'},
+  ACCESSOIRE:{title:'Vaste baloutfits',body:'De outfits liggen volledig klaar. Er is niets te kiezen of te optimaliseren; alleen aantrekken en spullen meenemen.'},
+  GROEPSFOTO:{title:'Voor vertrek',body:'De kamer is klaar voor een laatste foto vóór jullie naar beneden gaan.'}
+ }
+};
+const REQUIRED_INTERACTIONS={S01:['UITNODIGINGEN'],S03:['KAMERHOTSPOTS']};
 const IMAGES={
  S00:'assets/florine/photos/Rainy-Gothic-Manor-Arrival.png',
  S01:'assets/sam/photos/Cozy-Candlelit-Academy-Bedchamber.png',
@@ -37,7 +53,11 @@ const IMAGES={
  S30:'assets/sam/photos/Cozy-Candlelit-Academy-Bedchamber.png'
 };
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
-function split(s){return String(s||'').split('||').map(x=>x.trim()).filter(Boolean)}
+function split(s){
+  const v=String(s||'');
+  const sep=v.includes('||')?'||':'|';
+  return v.split(sep).map(x=>x.trim()).filter(Boolean);
+}
 function arrows(s){return split(s).map(x=>{const a=x.split('->');return{label:(a.shift()||'').trim(),reply:a.join('->').trim()}})}
 function owned(){try{return JSON.parse(localStorage.getItem('bt-owned-evidence')||'[]')}catch{return[]}}
 function addEvidence(ids){const set=new Set(owned());ids.forEach(x=>set.add(x));localStorage.setItem('bt-owned-evidence',JSON.stringify([...set]));syncChannel?.postMessage({type:'evidence',ids:[...set]})}
@@ -80,6 +100,10 @@ function safeText(s){
   return v;
 }
 function bg(s){return '../'+(IMAGES[s.scene_id]||'assets/florine/photos/Rainy-Gothic-Manor-Arrival.png')}
+function progressKey(scene){return 'bt-scene-progress-'+scene}
+function sceneProgress(scene){try{return JSON.parse(localStorage.getItem(progressKey(scene))||'[]')}catch{return[]}}
+function markProgress(scene,label){const s=new Set(sceneProgress(scene));s.add(label);localStorage.setItem(progressKey(scene),JSON.stringify([...s]))}
+function requirementsDone(s){const req=REQUIRED_INTERACTIONS[s.scene_id]||[];const done=new Set(sceneProgress(s.scene_id));return req.every(x=>done.has(x))}
 function save(){localStorage.setItem('bt-proj-scene',String(i))}
 function next(){if(i<SCENES.length-1){i++;save();render()}}
 function prev(){if(i>0){i--;save();render()}}
@@ -95,6 +119,7 @@ function render(){
  root.innerHTML=`<section class="stage" style="background-image:linear-gradient(90deg,rgba(4,6,9,.89),rgba(4,6,9,.48)),url('${bg(s)}')">
  <div class="chrome"><div>${esc(s.scene_id)} · ${esc(s.stage)}</div><div>${i+1}/${SCENES.length}</div></div>
  <div class="content"><div class="location">${esc(s.display_location||'BLACKTHORN ACADEMY')}</div>
+ ${s.scene_id==='S03'?'<div class="academyClock" id="academyClock">19:35</div>':''}
  ${s.kicker?`<div class="kicker">${esc(s.kicker)}</div>`:''}${s.title?`<h1>${esc(s.title)}</h1>`:''}${safeText(s.player_body)?`<p class="body">${esc(safeText(s.player_body))}</p>`:''}
  ${reactions?`<div class="dialogue">${split(reactions).map(x=>`<p>${esc(x)}</p>`).join('')}</div>`:''}
  ${s.shared_interactions?`<div class="choices">${interactions.map((x,n)=>`<button data-c="${n}">${esc(x.label)}</button>`).join('')}</div>`:''}
@@ -103,11 +128,23 @@ function render(){
  ${s.scene_id==='S22'&&!resolveB23()?`<div class="tag waiting">MAXINE · ROUTEKEUZE OP TELEFOON</div>`:''}
  ${s.team_task_sequence?`<div class="team"><b>TEAMTAKEN</b>${split(s.team_task_sequence).map(x=>`<p>${esc(x)}</p>`).join('')}</div>`:''}
  ${s.puzzle_marker?`<div class="tag ${ready?'ready':'waiting'}">DOSSIERSTAP · ${esc(s.puzzle_marker.replace('_READY',''))} · ${ready?'GEREED':'NOG NIET GEREED'}</div>`:''}
- ${s.pause_after?`<div class="tag pause">PAUZE · ${esc(s.pause_after.replace('_OPTIONAL',''))}</div>`:''}</div>
- <div class="nav"><button id="prev">←</button><select id="jump">${SCENES.map((x,n)=>`<option value="${n}" ${n===i?'selected':''}>${esc(x.scene_id)} · ${esc(x.title||x.stage)}</option>`).join('')}</select><button id="next">→</button></div></section>`;
- document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{const c=interactions[+b.dataset.c];if(!c.reply)return;let box=document.querySelector('.choiceReply');if(!box){box=document.createElement('div');box.className='choiceReply';document.querySelector('.choices').after(box)}box.textContent=c.reply});
+ ${s.pause_after?`<div class="tag pause">PAUZE · ${esc(s.pause_after.replace('_OPTIONAL',''))}</div>`:''}
+ ${!requirementsDone(s)?'<div class="requirement">Bekijk eerst het vereiste onderdeel in deze scène.</div>':''}</div>
+ <div class="nav"><button id="prev">←</button><select id="jump">${SCENES.map((x,n)=>`<option value="${n}" ${n===i?'selected':''}>${esc(x.scene_id)} · ${esc(x.title||x.stage)}</option>`).join('')}</select><button id="next" ${requirementsDone(s)?'':'disabled'}>→</button></div></section>`;
+ document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{
+   const c=interactions[+b.dataset.c], label=c.label.trim();
+   const detail=BEGIN_DETAILS[s.scene_id]?.[label];
+   markProgress(s.scene_id,label);
+   if(detail){
+     const o=document.createElement('div');o.className='overlay';o.innerHTML=`<div class="modal"><div class="kicker">BLACKTHORN</div><h2>${esc(detail.title)}</h2><p class="modalBody">${esc(detail.body)}</p><button id="closeDetail">SLUIT</button></div>`;
+     document.body.appendChild(o);document.getElementById('closeDetail').onclick=()=>{o.remove();render()};return;
+   }
+   if(c.reply){let box=document.querySelector('.choiceReply');if(!box){box=document.createElement('div');box.className='choiceReply';document.querySelector('.choices').after(box)}box.textContent=c.reply}
+   else render();
+ });
  const src=document.getElementById('openSource');if(src)src.onclick=()=>openSource(caseIds,s.case_key);
  document.getElementById('prev').onclick=prev;document.getElementById('next').onclick=next;document.getElementById('jump').onchange=e=>{i=+e.target.value;save();render()};
+ const clock=document.getElementById('academyClock');if(clock){const seen=sceneProgress('S03').length;clock.textContent=['19:35','19:44','19:57','20:06','20:14'][Math.min(seen,4)]}
 }
 function openSource(ids,key){
  addEvidence(ids);const o=document.createElement('div');o.className='overlay';o.innerHTML=`<div class="modal"><div class="kicker">VRIJGEGEVEN DOSSIER</div><h2>${esc(key)}</h2><div class="sourceCards">${ids.map(id=>`<div class="sourceCard"><small>TOEGEVOEGD</small><b>${esc(META.evidenceLabels[id]||id.replaceAll('_',' '))}</b></div>`).join('')}</div><button id="closeSource">SLUIT</button></div>`;document.body.appendChild(o);document.getElementById('closeSource').onclick=()=>{o.remove();render()}
