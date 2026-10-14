@@ -46,7 +46,7 @@ function renderPicker(){
 
 function renderHome(c){
   stopCam(); document.title=`${c.name} — Blackthorn Phone`;
-  app.innerHTML=`<section class="phone theme-${c.theme}" style="background-image:url('${wallpaper(c)}')"><div class="home"><div class="homeHeader"><div class="ownerPill"><i class="ownerDot"></i>${esc(c.name)}</div><div class="academyMark">BLACKTHORN</div></div><div class="grid">${homeApps.map(appButton).join('')}</div><div class="spacer"></div><div class="dock" aria-label="Quick apps">${['calls','messages','camera','blackthorn'].map(appButton).join('')}</div></div></section>`;
+  app.innerHTML=`<section class="phone theme-${c.theme}" style="background-image:url('${wallpaper(c)}')"><div class="home"><div class="homeHeader"><div class="ownerPill"><i class="ownerDot"></i>${esc(c.name)}</div><div class="academyMark"><span class="academySigil">✦</span><span>BLACKTHORN</span></div></div><div class="grid">${homeApps.map(appButton).join('')}</div><div class="spacer"></div><div class="dock" aria-label="Quick apps">${['calls','messages','camera','blackthorn'].map(appButton).join('')}</div></div></section>`;
   app.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>navigateApp(c,b.dataset.open));
 }
 
@@ -58,7 +58,7 @@ function navigateApp(c,id){
 }
 function goHome(){if(location.hash) history.back(); else renderHome(DATA[key])}
 function shell(title,body,right=''){
-  app.innerHTML=`<section class="screen theme-${DATA[key]?.theme||''}"><header class="topbar"><button id="back" aria-label="Terug naar beginscherm">‹ Home</button><h1>${esc(title)}</h1><div class="right">${right}</div></header><div class="content">${body}</div></section>`;
+  app.innerHTML=`<section class="screen theme-${DATA[key]?.theme||''}"><header class="topbar"><button id="back" aria-label="Terug naar beginscherm">‹ Home</button><div class="titleWrap"><span class="titleRune">✦</span><h1>${esc(title)}</h1><span class="titleRune">✦</span></div><div class="right">${right}</div></header><div class="content">${body}</div></section>`;
   document.getElementById('back').onclick=goHome;
 }
 function empty(title,text,id='messages'){
@@ -104,12 +104,12 @@ function renderCalendar(c){
 
 function renderMap(c){
   const locations=visibleItems(c.mapLocations);
-  shell('Map',`<div class="mapStage"><div class="mapPaper"></div><div class="mapBuilding"></div><div class="pin"></div><div class="mapLegend">Blackthorn Academy · access information updates with Academy instructions</div></div><div class="sectionLabel">Locations</div><div class="listCard">${locations.map((l,i)=>`<div class="mapRow"><span class="mapDot"></span><span><b>${esc(l.name)}</b><small>${esc(l.status||'')}${l.description?' · '+esc(l.description):''}</small></span></div>`).join('')}</div>`);
+  shell('Map',`<div class="mapStage"><div class="mapPaper"></div><div class="mapBuilding"></div><div class="pin"></div><div class="mapCompass">✦</div><div class="mapLegend"><b>BLACKTHORN ACADEMY</b><span>Access information updates with Academy instructions</span></div></div><div class="sectionLabel">Locations</div><div class="listCard">${locations.map((l,i)=>`<div class="mapRow"><span class="mapDot"></span><span><b>${esc(l.name)}</b><small>${esc(l.status||'')}${l.description?' · '+esc(l.description):''}</small></span></div>`).join('')}</div>`);
 }
 
 function renderBlackthorn(c){
   const ann=visibleItems(c.announcements);
-  shell('Blackthorn',`<div class="baHero"><div class="baCrest">✦</div><h2>Blackthorn Academy</h2><p>Official academy portal · ${esc(c.name)}</p></div><div class="sectionLabel">Academy services</div><div class="baGrid"><button class="baTile" data-ba="announcements"><span class="mini">◇</span><b>Announcements</b><span>${ann.length} notice(s)</span></button><button class="baTile" data-ba="directory"><span class="mini">⌁</span><b>Directory</b><span>Students & staff</span></button><button class="baTile" data-ba="events"><span class="mini">◌</span><b>Events</b><span>Schedule & ball</span></button><button class="baTile" data-ba="access"><span class="mini">⌂</span><b>Access</b><span>Buildings & rooms</span></button></div><div class="sectionLabel">Latest</div>${ann.slice().reverse().slice(0,5).map(a=>`<div class="card"><h3>${esc(a.title)}</h3><p>${esc(a.body||'')}</p></div>`).join('')}</div>`);
+  shell('Blackthorn',`<div class="baHero"><div class="baCrest"><span>✦</span></div><div class="baKicker">EST. MDCCLXXXIII · FOUNDED UNDER THE VEILED STAR</div><h2>Blackthorn Academy</h2><p>Official academy portal · ${esc(c.name)}</p></div><div class="sectionLabel">Academy services</div><div class="baGrid"><button class="baTile" data-ba="announcements"><span class="mini">◇</span><b>Announcements</b><span>${ann.length} notice(s)</span></button><button class="baTile" data-ba="directory"><span class="mini">⌁</span><b>Directory</b><span>Students & staff</span></button><button class="baTile" data-ba="events"><span class="mini">◌</span><b>Events</b><span>Schedule & ball</span></button><button class="baTile" data-ba="access"><span class="mini">⌂</span><b>Access</b><span>Buildings & rooms</span></button></div><div class="sectionLabel">Latest</div>${ann.slice().reverse().slice(0,5).map(a=>`<div class="card"><h3>${esc(a.title)}</h3><p>${esc(a.body||'')}</p></div>`).join('')}</div>`);
   app.querySelectorAll('[data-ba]').forEach(b=>b.onclick=()=>renderBlackthornSection(c,b.dataset.ba));
 }
 function renderBlackthornSection(c,section){
