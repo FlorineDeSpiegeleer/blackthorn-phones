@@ -116,11 +116,12 @@ function render(){
  ${s.puzzle_marker&&window.BlackthornPuzzles?BlackthornPuzzles.button(s.puzzle_marker,ready):''}
  ${effectiveWindow(s)&&/^W\d/.test(effectiveWindow(s))?`<div class="tag">PRIVÉVENSTER ${esc(effectiveWindow(s))} · telefoons · ${esc(readyStatus(s))}</div>`:''}
  ${s.scene_id==='S22'&&!resolveB23()?`<div class="tag waiting">MAXINE · ROUTEKEUZE OP TELEFOON</div>`:''}
+ ${s.scene_id==='S26'?accusationPanelHTML():''}
  ${s.team_task_sequence?`<div class="team"><b>TEAMTAKEN</b>${split(s.team_task_sequence).map(x=>`<p>${esc(x)}</p>`).join('')}</div>`:''}
  ${s.puzzle_marker?`<div class="tag ${ready?'ready':'waiting'}">DOSSIERSTAP · ${esc(s.puzzle_marker.replace('_READY',''))} · ${ready?'GEREED':'NOG NIET GEREED'}</div>`:''}
  ${s.pause_after?`<div class="tag pause">PAUZE · ${esc(s.pause_after.replace('_OPTIONAL',''))}</div>`:''}
  ${!requirementsDone(s)?'<div class="requirement">Bekijk eerst het vereiste onderdeel in deze scène.</div>':''}</div>
- <div class="nav"><button id="prev">←</button><select id="jump">${SCENES.map((x,n)=>`<option value="${n}" ${n===i?'selected':''}>${esc(x.scene_id)} · ${esc(x.title||x.stage)}</option>`).join('')}</select><button id="next" ${requirementsDone(s)?'':'disabled'}>→</button></div></section>`;
+ <div class="nav"><button id="prev">←</button>${DEBUG?`<select id="jump">${SCENES.map((x,n)=>`<option value="${n}" ${n===i?'selected':''}>${esc(x.scene_id)} · ${esc(x.title||x.stage)}</option>`).join('')}</select>`:`<div class="navLabel">${esc(s.display_location||s.stage)}</div>`}<button id="next" ${requirementsDone(s)?'':'disabled'}>→</button></div></section>`;
  document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{
    const c=interactions[+b.dataset.c], label=c.label.trim();
    const detail=BEGIN_DETAILS[s.scene_id]?.[label];
@@ -134,7 +135,13 @@ function render(){
  });
  const src=document.getElementById('openSource');if(src)src.onclick=()=>openSource(caseIds,s.case_key);
  if(s.puzzle_marker&&window.BlackthornPuzzles)BlackthornPuzzles.bind(s.puzzle_marker,ready,()=>render());
- document.getElementById('prev').onclick=prev;document.getElementById('next').onclick=next;document.getElementById('jump').onchange=e=>{i=+e.target.value;save();render()};
+ document.getElementById('prev').onclick=prev;document.getElementById('next').onclick=next;
+ const jump=document.getElementById('jump');if(jump)jump.onchange=e=>{i=+e.target.value;save();render()};
+ const voteBtn=document.getElementById('startNextVote');if(voteBtn)voteBtn.onclick=()=>{if(BlackthornAccusation.startNextVote())render()};
+ if(s.scene_id==='S26'&&window.BlackthornAccusation&&BlackthornAccusation.state().phase==='discussion'){
+   const end=Number(BlackthornAccusation.state().discussionEnds||0);
+   clearTimeout(window.__btDiscussionTimer);window.__btDiscussionTimer=setTimeout(()=>render(),Math.max(250,end-Date.now()+50));
+ }
  const clock=document.getElementById('academyClock');if(clock){const seen=sceneProgress('S03').length;clock.textContent=['19:35','19:44','19:57','20:06','20:14'][Math.min(seen,4)]}
 }
 function openSource(ids,key){
@@ -145,5 +152,6 @@ async function init(){
  catch(e){root.innerHTML=`<div class="loadError"><h1>Projector kon niet laden</h1><p>${esc(e.message)}</p></div>`;console.error(e)}
 }
 window.addEventListener('storage',e=>{if(e.key?.startsWith('bt-ready-')||e.key==='blackthorn-state-maxine')render()});
-syncChannel?.addEventListener('message',e=>{if(['ready','route'].includes(e.data?.type))render()});
+syncChannel?.addEventListener('message',e=>{if(['ready','route','accusation'].includes(e.data?.type))render()});
+window.addEventListener('blackthorn-accusation',()=>render());
 document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')prev()});init();
