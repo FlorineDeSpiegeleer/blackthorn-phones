@@ -108,6 +108,20 @@ function renderPhotos(){app.innerHTML=`${debugBar()}<section class="screen">${to
 function renderCalendar(){const items=BUILD.calendar.filter(x=>stageVisible(x.stage));app.innerHTML=`${debugBar()}<section class="screen">${topbar('Calendar')}<div class="calendarList">${items.map(e=>`<article><div class="date">${esc(e.date)}</div><time>${esc(e.time)}</time><h3>${esc(e.title)}</h3><p>${esc(e.location)}</p></article>`).join('')}</div></section>`;bindTop();bindDebug()}
 function renderMap(){app.innerHTML=`${debugBar()}<section class="screen">${topbar('Map')}<div class="mapHero"><img src="assets/florine/photos/Rainy-Gothic-Manor-Arrival.png"><div><b>BLACKTHORN ACADEMY</b><span>Locaties en toegangsstatus</span></div></div><div class="locationList">${BUILD.locations.map(l=>`<button class="locationRow" data-map><img src="${l.image}"><span><b>${esc(l.name)}</b><small>${esc(l.status)}</small></span></button>`).join('')}</div></section>`;document.querySelectorAll('[data-map]').forEach(b=>b.onclick=()=>{const st=state();st.map_opened=true;saveState(st);b.classList.add('seen')});bindTop();bindDebug()}
 function ownedEvidence(){try{return JSON.parse(localStorage.getItem('bt-owned-evidence')||'[]')}catch{return[]}}
+function evidenceHTML(id){
+  const e=window.BLACKTHORN_EVIDENCE?.[id];
+  if(!e)return '<article class="evidenceDoc"><h3>'+esc(META.evidenceLabels[id]||id.replaceAll('_',' '))+'</h3></article>';
+  let h='<article class="evidenceDoc"><h3>'+esc(e.title)+'</h3>';
+  if(e.subtitle)h+='<p class="evidenceSubtitle">'+esc(e.subtitle)+'</p>';
+  if(e.blocks)h+='<dl>'+e.blocks.map(x=>'<div><dt>'+esc(x[0])+'</dt><dd>'+esc(x[1])+'</dd></div>').join('')+'</dl>';
+  if(e.sections)h+=e.sections.map(s=>'<section><h4>'+esc(s[0])+'</h4>'+s[1].map(x=>'<p>'+esc(x)+'</p>').join('')+'</section>').join('');
+  if(e.list)h+='<ul>'+e.list.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>';
+  if(e.quote)h+='<blockquote>'+esc(e.quote)+'</blockquote>';
+  if(e.quotes)h+=e.quotes.map(q=>'<blockquote>'+esc(q)+'</blockquote>').join('');
+  if(e.table)h+='<div class="evidenceTableWrap"><table><thead><tr>'+e.table.headers.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+e.table.rows.map(r=>'<tr>'+r.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+  if(e.footer)h+='<footer>'+esc(e.footer)+'</footer>';
+  return h+'</article>';
+}
 function accusationPanel(){
   if(currentStage()!=='FINALE'||localStorage.getItem('bt-p4-board')!=='1'||!window.BlackthornAccusation)return '';
   const A=BlackthornAccusation,s=A.state(),mine=A.vote(s.round,key);
@@ -151,7 +165,8 @@ function renderAccusationBallot(){
   };
   bindTop();bindDebug();
 }
-function renderDossier(){const o=ownedEvidence();app.innerHTML=`${debugBar()}<section class="screen">${topbar('Dossier')}<div class="portalHero"><span>⌘</span><h2>Vrijgegeven dossier</h2><p>Alleen reeds vrijgegeven materiaal verschijnt hier.</p></div>${accusationPanel()}<div class="evidenceList">${o.length?o.map(id=>`<article class="evidenceCard"><small>VRIJGEGEVEN</small><h3>${esc(META.evidenceLabels[id]||id.replaceAll('_',' '))}</h3></article>`).join(''):'<div class="empty">Nog geen dossiermateriaal.</div>'}</div></section>`;bindAccusationPanel();bindTop();bindDebug()}
+function renderDossier(){const o=ownedEvidence();app.innerHTML=`${debugBar()}<section class="screen">${topbar('Dossier')}<div class="portalHero"><span>⌘</span><h2>Vrijgegeven dossier</h2><p>Alleen reeds vrijgegeven materiaal verschijnt hier.</p></div>${accusationPanel()}<div class="evidenceList">${o.length?o.map(id=>`<button class="evidenceCard" data-evidence="${id}"><small>VRIJGEGEVEN</small><h3>${esc(META.evidenceLabels[id]||id.replaceAll('_',' '))}</h3></button>`).join(''):'<div class="empty">Nog geen dossiermateriaal.</div>'}</div></section>`;document.querySelectorAll('[data-evidence]').forEach(b=>b.onclick=()=>renderEvidence(b.dataset.evidence));bindAccusationPanel();bindTop();bindDebug()}
+function renderEvidence(id){app.innerHTML=`${debugBar()}<section class="screen">${topbar('Dossierstuk')}<div class="evidencePage">${evidenceHTML(id)}</div></section>`;bindTop();bindDebug()}
 function renderBlackthorn(){const a=BUILD.announcements.filter(x=>stageVisible(x.stage));app.innerHTML=`${debugBar()}<section class="screen">${topbar('Blackthorn')}<div class="portalHero"><span>✦</span><h2>Blackthorn Academy</h2><p>Officieel studentenportaal</p></div><h3 class="sectionTitle">Meldingen</h3>${a.slice().reverse().map(x=>`<article class="notice"><h3>${esc(x.title)}</h3><p>${esc(x.body)}</p></article>`).join('')}<h3 class="sectionTitle">Directory</h3><div class="directory">${BUILD.directory.map(d=>`<div class="dirRow"><span class="avatar">${esc(d.name[0])}</span><span><b>${esc(d.name)}</b><small>${esc(d.role)}</small></span></div>`).join('')}</div></section>`;bindTop();bindDebug()}
 function renderNotes(){const n='bt-notes-'+key,v=localStorage.getItem(n)||'';app.innerHTML=`${debugBar()}<section class="screen">${topbar('Notes')}<textarea id="notes" placeholder="Jullie eigen notities…">${esc(v)}</textarea></section>`;document.getElementById('notes').oninput=e=>localStorage.setItem(n,e.target.value);bindTop();bindDebug()}
 function renderCamera(){app.innerHTML=`${debugBar()}<section class="screen">${topbar('Camera')}<div class="fakeCamera"><img src="${player.wallpaper}"><div class="cameraFrame"></div></div><button class="shutter">●</button><p class="cameraHint">Technische build.</p></section>`;bindTop();bindDebug()}
