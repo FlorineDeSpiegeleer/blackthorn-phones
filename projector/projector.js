@@ -1,5 +1,6 @@
 const META=window.BLACKTHORN_META||{caseEvidence:{},evidenceLabels:{},puzzleGates:{}};
 const root=document.getElementById('projector');
+const DEBUG=new URLSearchParams(location.search).get('debug')==='1';
 const syncChannel=('BroadcastChannel' in window)?new BroadcastChannel('blackthorn-v63-sync'):null;
 let SCENES=[],i=Number(localStorage.getItem('bt-proj-scene')||0);
 const BEGIN_DETAILS={
@@ -74,10 +75,26 @@ function requirementsDone(s){
   const req=REQUIRED_INTERACTIONS[s.scene_id]||[],seen=new Set(sceneProgress(s.scene_id));
   const base=req.every(x=>seen.has(x));
   const puzzleOK=!s.puzzle_marker||(window.BlackthornPuzzles&&BlackthornPuzzles.isComplete(s.puzzle_marker));
-  return base&&puzzleOK;
+  const accusationOK=s.scene_id!=='S26'||(window.BlackthornAccusation&&BlackthornAccusation.isLocked());
+  const protectedOK=s.scene_id!=='S27'||localStorage.getItem('bt-protected-finale-linked')==='1';
+  return base&&puzzleOK&&accusationOK&&protectedOK;
+}
+function accusationPanelHTML(){
+  if(!window.BlackthornAccusation||localStorage.getItem('bt-p4-board')!=='1')return '<div class="finalePanel"><b>ACCUSATION</b><p>Theory board nog niet voltooid.</p></div>';
+  const A=BlackthornAccusation,s=A.state(),count=A.votes(s.round).length;
+  if(s.phase==='locked')return '<div class="finalePanel locked"><b>BESCHULDIGING VERGRENDELD</b><h3>'+esc(s.locked.accused)+'</h3><p>De steunkaarten en stemgeschiedenis zijn opgeslagen.</p></div>';
+  if(['voting','final_vote'].includes(s.phase))return '<div class="finalePanel"><b>VERBORGEN STEMRONDE '+s.round+'</b><h3>'+count+'/3 ingediend</h3><p>Stemmen blijven verborgen tot iedereen heeft ingediend.</p></div>';
+  if(s.phase==='minority_decision')return '<div class="finalePanel"><b>GROEPSPROTOCOL</b><h3>Er is een 2–1 voorstel.</h3><p>Wacht op de minderheidsbeslissing.</p></div>';
+  if(s.phase==='confirmer_pick')return '<div class="finalePanel"><b>GROEPSPROTOCOL</b><h3>Drie verschillende stemmen.</h3><p>De roterende confirmer kiest welke beschuldiging eerst besproken wordt.</p></div>';
+  if(s.phase==='final_elimination')return '<div class="finalePanel"><b>FINAL BALLOT</b><h3>Drie opties bleven verdeeld.</h3><p>De confirmer verwijdert één optie uit het laatste stembiljet.</p></div>';
+  if(s.phase==='discussion'){
+    const sec=Math.max(0,Math.ceil((Number(s.discussionEnds||0)-Date.now())/1000));
+    return '<div class="finalePanel"><b>OPEN DISCUSSIE</b><h3 id="discussionClock">'+sec+'s</h3><p>Bespreek alleen wat al in jullie dossier en theory board staat.</p><button id="startNextVote" '+(sec>0?'disabled':'')+'>START VOLGENDE VERBORGEN STEM</button></div>';
+  }
+  return '';
 }
 function save(){localStorage.setItem('bt-proj-scene',String(i))}
-function next(){if(i<SCENES.length-1){i++;save();render()}}
+function next(){const s=SCENES[i];if(s&&!requirementsDone(s))return;if(i<SCENES.length-1){i++;save();render()}}
 function prev(){if(i>0){i--;save();render()}}
 function render(){
  const s=SCENES[i];if(!s)return;syncStage(s);
