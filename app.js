@@ -108,7 +108,50 @@ function renderPhotos(){app.innerHTML=`${debugBar()}<section class="screen">${to
 function renderCalendar(){const items=BUILD.calendar.filter(x=>stageVisible(x.stage));app.innerHTML=`${debugBar()}<section class="screen">${topbar('Calendar')}<div class="calendarList">${items.map(e=>`<article><div class="date">${esc(e.date)}</div><time>${esc(e.time)}</time><h3>${esc(e.title)}</h3><p>${esc(e.location)}</p></article>`).join('')}</div></section>`;bindTop();bindDebug()}
 function renderMap(){app.innerHTML=`${debugBar()}<section class="screen">${topbar('Map')}<div class="mapHero"><img src="assets/florine/photos/Rainy-Gothic-Manor-Arrival.png"><div><b>BLACKTHORN ACADEMY</b><span>Locaties en toegangsstatus</span></div></div><div class="locationList">${BUILD.locations.map(l=>`<button class="locationRow" data-map><img src="${l.image}"><span><b>${esc(l.name)}</b><small>${esc(l.status)}</small></span></button>`).join('')}</div></section>`;document.querySelectorAll('[data-map]').forEach(b=>b.onclick=()=>{const st=state();st.map_opened=true;saveState(st);b.classList.add('seen')});bindTop();bindDebug()}
 function ownedEvidence(){try{return JSON.parse(localStorage.getItem('bt-owned-evidence')||'[]')}catch{return[]}}
-function renderDossier(){const o=ownedEvidence();app.innerHTML=`${debugBar()}<section class="screen">${topbar('Dossier')}<div class="portalHero"><span>⌘</span><h2>Vrijgegeven dossier</h2><p>Alleen reeds vrijgegeven materiaal verschijnt hier.</p></div><div class="evidenceList">${o.length?o.map(id=>`<article class="evidenceCard"><small>VRIJGEGEVEN</small><h3>${esc(META.evidenceLabels[id]||id.replaceAll('_',' '))}</h3></article>`).join(''):'<div class="empty">Nog geen dossiermateriaal.</div>'}</div></section>`;bindTop();bindDebug()}
+function accusationPanel(){
+  if(currentStage()!=='FINALE'||localStorage.getItem('bt-p4-board')!=='1'||!window.BlackthornAccusation)return '';
+  const A=BlackthornAccusation,s=A.state(),mine=A.vote(s.round,key);
+  if(s.phase==='locked')return `<div class="accCard locked"><small>BESCHULDIGING</small><h3>Groepsbeslissing vergrendeld</h3><p>${esc(s.locked.accused)}</p></div>`;
+  if(['voting','final_vote'].includes(s.phase)){
+    if(mine)return `<div class="accCard"><small>RONDE ${s.round}</small><h3>Stem ingediend</h3><p>Je keuze blijft verborgen tot alle drie hebben ingediend.</p></div>`;
+    return `<div class="accCard"><small>RONDE ${s.round}</small><h3>Privébeschuldiging</h3><p>Kies één persoon en één steunkaart per categorie.</p><button id="openBallot">OPEN STEMBILJET</button></div>`;
+  }
+  if(s.phase==='minority_decision'){
+    if(s.minorityPlayer!==key)return '<div class="accCard"><h3>2–1 voorstel</h3><p>Wacht op de minderheidsbeslissing.</p></div>';
+    return '<div class="accCard"><h3>Er is een 2–1 voorstel.</h3><div class="accActions"><button data-minority="accept">ACCEPTEER DE MEERDERHEID</button><button data-minority="object">MAAK BEZWAAR</button></div></div>';
+  }
+  if(s.phase==='confirmer_pick'){
+    if(s.confirmerPlayer!==key)return '<div class="accCard"><h3>Drie verschillende stemmen</h3><p>Wacht op de confirmer.</p></div>';
+    return `<div class="accCard"><h3>Kies welke beschuldiging eerst besproken wordt</h3><div class="accActions">${(s.options||[]).map(x=>`<button data-confirm="${esc(x)}">${esc(x)}</button>`).join('')}</div></div>`;
+  }
+  if(s.phase==='final_elimination'){
+    if(s.confirmerPlayer!==key)return '<div class="accCard"><h3>Final ballot voorbereiden</h3><p>Wacht op de confirmer.</p></div>';
+    return `<div class="accCard"><h3>Verwijder één optie uit het laatste stembiljet</h3><div class="accActions">${(s.options||[]).map(x=>`<button data-eliminate="${esc(x)}">${esc(x)}</button>`).join('')}</div></div>`;
+  }
+  if(s.phase==='discussion')return '<div class="accCard"><h3>Open discussie</h3><p>Bespreek de huidige voorstellen op de projector. Daarna opent een nieuwe verborgen stemronde.</p></div>';
+  return '';
+}
+function bindAccusationPanel(){
+  const open=document.getElementById('openBallot');if(open)open.onclick=renderAccusationBallot;
+  document.querySelectorAll('[data-minority]').forEach(b=>b.onclick=()=>{BlackthornAccusation.minorityDecision(key,b.dataset.minority);renderDossier()});
+  document.querySelectorAll('[data-confirm]').forEach(b=>b.onclick=()=>{BlackthornAccusation.confirmerPick(key,b.dataset.confirm);renderDossier()});
+  document.querySelectorAll('[data-eliminate]').forEach(b=>b.onclick=()=>{BlackthornAccusation.eliminate(key,b.dataset.eliminate);renderDossier()});
+}
+function renderAccusationBallot(){
+  const A=BlackthornAccusation,s=A.state(),allowed=s.allowed||A.ROSTER,cats=['OBJECT','DOCUMENT','ACCESS','TIMELINE'];
+  app.innerHTML=`${debugBar()}<section class="screen">${topbar('Privébeschuldiging')}<div class="ballot"><p class="ballotNote">Geen standaardkeuze. Je stem blijft verborgen tot iedereen heeft ingediend.</p>
+  <label>Beschuldigde<select id="accused"><option value="">— kies —</option>${allowed.map(n=>`<option>${esc(n)}</option>`).join('')}</select></label>
+  ${cats.map(c=>`<label>${c}<select data-support="${c}"><option value="">— steunkaart —</option>${A.availableSupport(c).map(x=>`<option value="${x.id}">${esc(x.label)}</option>`).join('')}</select></label>`).join('')}
+  <div id="ballotFeedback" class="puzzleFeedback">Kies één kaart per categorie.</div><button id="submitBallot">DIEN VERBORGEN STEM IN</button></div></section>`;
+  document.getElementById('submitBallot').onclick=()=>{
+    const support=Object.fromEntries(cats.map(c=>[c,document.querySelector(`[data-support="${c}"]`).value]));
+    const accused=document.getElementById('accused').value;
+    if(!accused||cats.some(c=>!support[c])){document.getElementById('ballotFeedback').textContent='Vul de beschuldigde en alle vier steunkaarten in.';return}
+    if(A.submit(key,{accused,support})){renderDossier()}else document.getElementById('ballotFeedback').textContent='Deze stem kon niet worden ingediend. Controleer de vrijgegeven kaarten.';
+  };
+  bindTop();bindDebug();
+}
+function renderDossier(){const o=ownedEvidence();app.innerHTML=`${debugBar()}<section class="screen">${topbar('Dossier')}<div class="portalHero"><span>⌘</span><h2>Vrijgegeven dossier</h2><p>Alleen reeds vrijgegeven materiaal verschijnt hier.</p></div>${accusationPanel()}<div class="evidenceList">${o.length?o.map(id=>`<article class="evidenceCard"><small>VRIJGEGEVEN</small><h3>${esc(META.evidenceLabels[id]||id.replaceAll('_',' '))}</h3></article>`).join(''):'<div class="empty">Nog geen dossiermateriaal.</div>'}</div></section>`;bindAccusationPanel();bindTop();bindDebug()}
 function renderBlackthorn(){const a=BUILD.announcements.filter(x=>stageVisible(x.stage));app.innerHTML=`${debugBar()}<section class="screen">${topbar('Blackthorn')}<div class="portalHero"><span>✦</span><h2>Blackthorn Academy</h2><p>Officieel studentenportaal</p></div><h3 class="sectionTitle">Meldingen</h3>${a.slice().reverse().map(x=>`<article class="notice"><h3>${esc(x.title)}</h3><p>${esc(x.body)}</p></article>`).join('')}<h3 class="sectionTitle">Directory</h3><div class="directory">${BUILD.directory.map(d=>`<div class="dirRow"><span class="avatar">${esc(d.name[0])}</span><span><b>${esc(d.name)}</b><small>${esc(d.role)}</small></span></div>`).join('')}</div></section>`;bindTop();bindDebug()}
 function renderNotes(){const n='bt-notes-'+key,v=localStorage.getItem(n)||'';app.innerHTML=`${debugBar()}<section class="screen">${topbar('Notes')}<textarea id="notes" placeholder="Jullie eigen notities…">${esc(v)}</textarea></section>`;document.getElementById('notes').oninput=e=>localStorage.setItem(n,e.target.value);bindTop();bindDebug()}
 function renderCamera(){app.innerHTML=`${debugBar()}<section class="screen">${topbar('Camera')}<div class="fakeCamera"><img src="${player.wallpaper}"><div class="cameraFrame"></div></div><button class="shutter">●</button><p class="cameraHint">Technische build.</p></section>`;bindTop();bindDebug()}
@@ -117,5 +160,6 @@ async function init(){
   catch(e){app.innerHTML=`<div class="loadError"><h1>Blackthorn kon niet laden</h1><p>${esc(e.message)}</p></div>`;console.error(e)}
 }
 window.addEventListener('storage',e=>{if(['bt-global-stage','bt-global-window','bt-unlocked-flows'].includes(e.key)&&screen==='home')renderHome()});
-syncChannel?.addEventListener('message',e=>{if(e.data?.type==='stage'&&screen==='home')renderHome()});
+syncChannel?.addEventListener('message',e=>{if(e.data?.type==='stage'&&screen==='home')renderHome();if(e.data?.type==='accusation'&&document.querySelector('.screen')){const h=document.querySelector('.topbar h1')?.textContent;if(h==='Dossier')renderDossier()}});
+window.addEventListener('blackthorn-accusation',()=>{const h=document.querySelector('.topbar h1')?.textContent;if(h==='Dossier')renderDossier()});
 init();
