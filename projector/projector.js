@@ -28,6 +28,18 @@ function split(s){
 }
 function arrows(s){return split(s).map(x=>{const a=x.split('->');return{label:(a.shift()||'').trim(),reply:a.join('->').trim()}})}
 function owned(){try{return JSON.parse(localStorage.getItem('bt-owned-evidence')||'[]')}catch{return[]}}
+function evidenceHTML(id){
+ const e=window.BLACKTHORN_EVIDENCE?.[id];if(!e)return '<article class="evidenceDoc"><h3>'+esc(META.evidenceLabels[id]||id.replaceAll('_',' '))+'</h3></article>';
+ let h='<article class="evidenceDoc"><h3>'+esc(e.title)+'</h3>';
+ if(e.subtitle)h+='<p class="evidenceSubtitle">'+esc(e.subtitle)+'</p>';
+ if(e.blocks)h+='<dl>'+e.blocks.map(x=>'<div><dt>'+esc(x[0])+'</dt><dd>'+esc(x[1])+'</dd></div>').join('')+'</dl>';
+ if(e.sections)h+=e.sections.map(s=>'<section><h4>'+esc(s[0])+'</h4>'+s[1].map(x=>'<p>'+esc(x)+'</p>').join('')+'</section>').join('');
+ if(e.list)h+='<ul>'+e.list.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>';
+ if(e.quote)h+='<blockquote>'+esc(e.quote)+'</blockquote>';
+ if(e.quotes)h+=e.quotes.map(q=>'<blockquote>'+esc(q)+'</blockquote>').join('');
+ if(e.table)h+='<div class="evidenceTableWrap"><table><thead><tr>'+e.table.headers.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+e.table.rows.map(r=>'<tr>'+r.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+ if(e.footer)h+='<footer>'+esc(e.footer)+'</footer>';return h+'</article>';
+}
 function addEvidence(ids){const set=new Set(owned());ids.forEach(x=>set.add(x));localStorage.setItem('bt-owned-evidence',JSON.stringify([...set]));syncChannel?.postMessage({type:'evidence',ids:[...set]})}
 function gateReady(m){const g=META.puzzleGates[m];if(!g)return true;const set=new Set(owned());return(g.all||[]).every(x=>set.has(x))&&(!(g.any||[]).length||(g.any||[]).some(a=>a.every(x=>set.has(x))))}
 function flowIds(s){return String(s.phone_flow_ids||'').split('|').map(x=>x.trim()).filter(Boolean)}
@@ -145,7 +157,7 @@ function render(){
  const clock=document.getElementById('academyClock');if(clock){const seen=sceneProgress('S03').length;clock.textContent=['19:35','19:44','19:57','20:06','20:14'][Math.min(seen,4)]}
 }
 function openSource(ids,key){
- addEvidence(ids);const o=document.createElement('div');o.className='overlay';o.innerHTML=`<div class="modal"><div class="kicker">VRIJGEGEVEN DOSSIER</div><h2>${esc(key)}</h2><div class="sourceCards">${ids.map(id=>`<div class="sourceCard"><small>TOEGEVOEGD</small><b>${esc(META.evidenceLabels[id]||id.replaceAll('_',' '))}</b></div>`).join('')}</div><button id="closeSource">SLUIT</button></div>`;document.body.appendChild(o);document.getElementById('closeSource').onclick=()=>{o.remove();render()}
+ addEvidence(ids);const o=document.createElement('div');o.className='overlay';o.innerHTML=`<div class="modal evidenceModal"><div class="kicker">VRIJGEGEVEN DOSSIER</div><h2>${esc(key)}</h2><div class="sourceCards">${ids.map(id=>`<button class="sourceCard" data-source-id="${id}"><small>TOEGEVOEGD</small><b>${esc(META.evidenceLabels[id]||id.replaceAll('_',' '))}</b></button>`).join('')}</div><div id="sourceDetail"></div><button id="closeSource">SLUIT</button></div>`;document.body.appendChild(o);document.querySelectorAll('[data-source-id]').forEach(b=>b.onclick=()=>{document.getElementById('sourceDetail').innerHTML=evidenceHTML(b.dataset.sourceId)});document.getElementById('closeSource').onclick=()=>{o.remove();render()}
 }
 async function init(){
  try{const r=await fetch('../production/v63/BLACKTHORN_SCENE_TABLE_V6_3_AUTHORITATIVE_GM_ONLY.csv',{cache:'no-store'});SCENES=btParseCsv(await r.text());i=Math.max(0,Math.min(i,SCENES.length-1));render()}
