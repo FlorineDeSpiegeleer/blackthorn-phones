@@ -1,0 +1,247 @@
+{
+  "package": "BLACKTHORN V6.3 ASSET PLAN",
+  "status": "WORK BRANCH",
+  "policy": {
+    "keepExistingRepoAssets": true,
+    "uploadNormalizedLocalAssetsLater": true,
+    "noEarlyLIPortraitSpoilers": true,
+    "preserveFictionalIdentityAcrossAlternates": true
+  },
+  "available_unique_or_keep": [
+    "academy_exterior.png",
+    "grand_ballroom.png",
+    "arrival_checkpoint.png",
+    "east_gallery.png",
+    "founders_gallery.png",
+    "courtyard_rain.png",
+    "library_nook.png",
+    "great_hall.png",
+    "library_evening.png",
+    "library_salon.png",
+    "stairwell.png",
+    "conservation.png",
+    "council_room.png",
+    "observatory.png",
+    "wintergarden.png",
+    "maintenance_stair.png",
+    "ball_wide.png",
+    "ball_academy.png",
+    "ball_entrance_trio.png",
+    "dressing_room_1.png",
+    "florine_portrait.png",
+    "florine_day.png",
+    "florine_alt.png",
+    "florine_ball.png",
+    "sam_portrait.png",
+    "maxine_portrait.png",
+    "maxine_day.png",
+    "maxine_ball.png",
+    "sebastian.png"
+  ],
+  "duplicate_or_review": [
+    {
+      "files": [
+        "suite_417.png",
+        "suite_417_alt.png"
+      ],
+      "action": "keep one now; replace alt with later-suite image"
+    },
+    {
+      "files": [
+        "archive_study.png",
+        "archive_study_alt.png"
+      ],
+      "action": "keep one until real alternate exists"
+    },
+    {
+      "files": [
+        "service_corridor.png",
+        "service_corridor_alt.png"
+      ],
+      "action": "keep one until real alternate exists"
+    },
+    {
+      "files": [
+        "clinic.png",
+        "clinic_alt.png"
+      ],
+      "action": "keep one until real alternate exists"
+    },
+    {
+      "files": [
+        "group_masquerade_1.png",
+        "group_masquerade_2.png"
+      ],
+      "action": "replace second with new group image"
+    },
+    {
+      "files": [
+        "dressing_room_2.png",
+        "dressing_room_3.png"
+      ],
+      "action": "replace with one useful group-prep alternate and drop extra"
+    },
+    {
+      "files": [
+        "ball_selfie_1.png",
+        "ball_selfie_2.png"
+      ],
+      "action": "replace second with distinct ball selfie"
+    },
+    {
+      "files": [
+        "sam_day.png",
+        "sam_ball.png"
+      ],
+      "action": "replace both with distinct same-identity images"
+    },
+    {
+      "files": [
+        "alexander.png",
+        "alexander_alt.png"
+      ],
+      "action": "replace alt using primary as image reference"
+    },
+    {
+      "files": [
+        "nate.png",
+        "nate_alt.png"
+      ],
+      "action": "replace alt using primary as image reference"
+    },
+    {
+      "files": [
+        "theo.png",
+        "theo_alt.png"
+      ],
+      "action": "verify identity and replace alt using primary as image reference"
+    },
+    {
+      "files": [
+        "adrian.png",
+        "adrian_alt.png"
+      ],
+      "action": "replace alt using primary as image reference"
+    }
+  ],
+  "create_new": [
+    {
+      "file": "headmistress_office.png",
+      "priority": 1,
+      "use": [
+        "S15",
+        "S19E"
+      ],
+      "prompt": "A private headmistress office inside an ancient elite dark-academia boarding school, historical European university atmosphere, tall gothic windows with rain outside, dark walnut desk, old books and sealed academy documents, brass desk lamp, navy and antique gold heraldic details, carved stone fireplace, formal but intimidating institutional atmosphere, subtle magical ambiguity, cinematic realistic photography, warm candlelight mixed with cool rainy daylight, no people, no text, widescreen 16:9"
+    },
+    {
+      "file": "archive_handling_area.png",
+      "priority": 1,
+      "use": [
+        "S20"
+      ],
+      "prompt": "A supervised archive handling room inside an ancient dark-academia university, long oak worktables, archival boxes, cataloguing sheets, gloves and conservation materials, a heavy wooden archive trolley loaded with document boxes positioned beside the table, gothic stone walls, tall shelving, institutional but atmospheric, warm brass lamps, realistic cinematic photography, no people, no readable text, widescreen 16:9"
+    },
+    {
+      "file": "controlled_records_room.png",
+      "priority": 1,
+      "use": [
+        "S12A",
+        "S19A",
+        "S19B",
+        "S19C",
+        "S19D"
+      ],
+      "prompt": "A restricted security records room in a prestigious centuries-old academy, dark wood archive cabinets mixed with discreet modern security terminals, old access ledgers, card-reader equipment, institutional filing drawers, stone walls, navy-and-gold academy insignia, guarded controlled-access atmosphere, subtle modern technology integrated into dark academia architecture, cinematic realistic photography, no people, no readable text, widescreen 16:9"
+    },
+    {
+      "file": "west_route_after_structural_failure.png",
+      "priority": 1,
+      "use": [
+        "S16B"
+      ],
+      "prompt": "An old restricted maintenance passage inside a gothic academy immediately after a structural failure, cracked stonework, displaced wooden railing, dust in the air, torn fabric caught on damaged masonry, narrow service stairs, rainwater seeping through old stone, emergency lantern light, serious but non-gory atmosphere, no visible injured people, no blood close-up, cinematic realistic photography, dark academia, widescreen 16:9"
+    },
+    {
+      "file": "suite_417_later.png",
+      "priority": 1,
+      "use": [
+        "S30"
+      ],
+      "prompt": "The same shared student suite in an elite gothic academy several weeks after a masked ball, lived-in and cozy, books, coffee cups, notebooks, photographs and open masquerade mask boxes scattered naturally, autumn afternoon light through tall windows, navy and warm gold details, familiar rather than formal, cinematic realistic photography, no people, no readable text, widescreen 16:9"
+    },
+    {
+      "file": "sam_day.png",
+      "priority": 2,
+      "use": [
+        "phone/photos"
+      ],
+      "prompt": "Fictional 22-year-old female university student at an elite dark-academia school, intelligent observant expression, polished but natural student look, dark academic everyday clothing rather than eveningwear, books and old university corridor softly blurred behind her, realistic cinematic portrait photography, warm autumn light, elegant but not glamorous, no mask, vertical portrait 4:5. Must preserve the established fictional Sam identity."
+    },
+    {
+      "file": "sam_ball.png",
+      "priority": 2,
+      "use": [
+        "phone/photos"
+      ],
+      "prompt": "The same fictional 22-year-old female university student at an elite gothic academy during a formal masquerade ball, elegant historical-fantasy evening gown with dark academic styling, refined masquerade mask, candlelit grand hall softly blurred in the background, intelligent composed expression, cinematic realistic portrait photography, navy, black and antique gold palette, vertical portrait 4:5. Must preserve the established fictional Sam identity."
+    },
+    {
+      "file": "alexander_alt.png",
+      "priority": 2,
+      "use": [
+        "phone/romance"
+      ],
+      "prompt": "Keep exactly the same fictional man, facial identity, hair, age and distinguishing features as the established Alexander image. Show him in a less formal academy Guard training setting, dark navy shirt with rolled sleeves, leather gloves in one hand, visible old scar, family pinky ring visible, restrained old-money styling, serious slightly amused expression, gothic academy courtyard or armoury background, cinematic realistic portrait, vertical 4:5."
+    },
+    {
+      "file": "nate_alt.png",
+      "priority": 2,
+      "use": [
+        "phone/romance"
+      ],
+      "prompt": "Keep exactly the same fictional man, facial identity, curly brown hair, freckles or dimples and age as the established Nate image. Place him in a quiet old Blackthorn library, sleeves slightly relaxed, polished old-money academic clothing, intelligent humorous expression, warm reading lamp, subtle navy details and family ring, cinematic realistic portrait, vertical 4:5."
+    },
+    {
+      "file": "theo_alt.png",
+      "priority": 2,
+      "use": [
+        "phone/romance"
+      ],
+      "prompt": "Keep exactly the same fictional man and facial identity as the established Theo image. Show him as a highly successful young doctor-researcher in Blackthorn Academy's historical clinic, dark old-money clothing with rolled sleeves, medical notes and antique apothecary cabinetry behind him, athletic build, wavy dark hair, freckles, sharp jaw, restrained sarcastic expression, cinematic realistic portrait, vertical 4:5."
+    },
+    {
+      "file": "adrian_alt.png",
+      "priority": 2,
+      "use": [
+        "phone/romance"
+      ],
+      "prompt": "Keep exactly the same fictional man and facial identity as the established Adrian image. Show him during provenance work in an elegant gothic gallery, examining an old labelled object with gloves or a notebook, old-family tailoring, dark wavy hair, sharp jaw, controlled confident expression, framed historical objects and warm gallery lighting behind him, cinematic realistic portrait, vertical 4:5."
+    },
+    {
+      "file": "group_masquerade_2.png",
+      "priority": 3,
+      "use": [
+        "phone/photos"
+      ],
+      "prompt": "Three fictional 22-year-old female university friends at a candlelit gothic academy masquerade ball, casual spontaneous phone selfie, recognizably the same three women as the existing Blackthorn student portraits, elegant masked-ball outfits, grand hall behind them, candid friendship energy, slightly imperfect selfie framing, realistic smartphone photography, warm candlelight, no extra foreground people."
+    },
+    {
+      "file": "dressing_room_group_selfie.png",
+      "priority": 3,
+      "use": [
+        "phone/photos",
+        "S03 optional"
+      ],
+      "prompt": "Three fictional female university friends getting ready together in a gothic academy suite before a masquerade ball, dresses and masquerade masks visible around the room, mirrors, open boxes, books and cosmetics, fun candid phone selfie, warm lamps and candlelight, same three women as the Blackthorn protagonists, realistic smartphone photography, no other people."
+    },
+    {
+      "file": "ball_selfie_2.png",
+      "priority": 3,
+      "use": [
+        "phone/photos"
+      ],
+      "prompt": "The same three fictional female students taking a spontaneous selfie during the masked ball in Blackthorn Academy's Grand Hall, candlelit balconies and blurred masked guests behind them, elegant gowns and masks, candid rather than posed, realistic phone-camera appearance, slightly different composition from their earlier group selfie, vertical image."
+    }
+  ]
+}

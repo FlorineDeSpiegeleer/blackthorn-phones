@@ -1,0 +1,25 @@
+name: Validate Blackthorn V6.3
+on:
+  push:
+    branches:
+      - blackthorn-v2-work
+  pull_request:
+    branches:
+      - main
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python tools/validate_v63.py
+      - name: JavaScript syntax
+        run: |
+          node --check app.js
+          node --check runtime-data.js
+          node --check game-meta.js
+          node --check evidence-data.js
+          node --check asset-map.js
+          node --check accusation.js
+          node --check projector/projector.js
+          node --check projector/puzzle-data.js
+          node --check projector/puzzles.js

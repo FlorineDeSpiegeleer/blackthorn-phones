@@ -1,469 +1,169 @@
-const SCENES = [
-  {
-    id:'A0',
-    label:'A0 — Voorbereiding',
-    image:'assets/guest_suite_getting_ready.png',
-    steps:[
-      {
-        type:'title',
-        location:'BLACKTHORN ACADEMY • GUEST SUITE 417',
-        kicker:'FOUNDERS’ WEEK',
-        title:'THE NIGHT OF THE VEILED MOON',
-        subtitle:'Jullie zijn net aangekomen in Suite 417. Buiten tikt regen tegen de hoge ramen. Beneden is het bal al begonnen.'
-      },
-      {
-        type:'story',
-        location:'BLACKTHORN ACADEMY • GUEST SUITE 417',
-        kicker:'VOORBEREIDING',
-        title:'Nog één ding voor jullie vertrekken.',
-        text:'Kies op jullie telefoon je masker en wat je meeneemt. Maak gerust nog een foto. De gastenprocessie sluit om 20:15.'
-      },
-      {
-        type:'phone',
-        location:'BLACKTHORN ACADEMY • GUEST SUITE 417',
-        title:'PAK JULLIE TELEFOON',
-        subtitle:'Rond de korte voorbereiding op jullie eigen toestel af. Als iedereen klaar is, gaan jullie samen naar beneden.',
-        action:'IEDEREEN KLAAR? → GA VERDER'
-      },
-      {
-        type:'title',
-        location:'BLACKTHORN ACADEMY • GUEST SUITE 417',
-        kicker:'VERTREK',
-        title:'20:14',
-        subtitle:'Jullie trekken de deur van Suite 417 achter jullie dicht.'
-      },
-      {type:'transition',from:'GUEST SUITE 417',to:'GRAND STAIR CHECKPOINT'}
-    ]
-  },
-  {
-    id:'A1',
-    label:'A1 — Late aankomst',
-    image:'assets/grand_stair_arrival.png',
-    steps:[
-      {
-        type:'story',
-        location:'BLACKTHORN ACADEMY • GRAND STAIR CHECKPOINT',
-        kicker:'LATE AANKOMST',
-        title:'De processie is al voorbij.',
-        text:'Regen tikt tegen de hoge ramen. Het ceremoniële koord is gesloten. Achter de checkpointtafel kijkt een man op uit een papieren logboek.'
-      },
-      {
-        type:'dialogue',
-        location:'BLACKTHORN ACADEMY • GRAND STAIR CHECKPOINT',
-        speaker:'GIDEON BELL',
-        text:'Goedenavond. Jullie komen na de processiesluiting binnen. Mag ik jullie namen?',
-        choices:[
-          {label:'ANTWOORD IN JULLIE EIGEN WOORDEN',reply:'Dank u. Ik schrijf jullie als één late aankomstgroep in.'}
-        ]
-      },
-      {
-        type:'story',
-        location:'BLACKTHORN ACADEMY • GRAND STAIR CHECKPOINT',
-        kicker:'CHECKPOINT',
-        title:'Gideon buigt zich weer over zijn logboek.',
-        text:'Aan de andere kant van het gesloten processiekoord wacht de gewone gastenroute richting Grand Hall.'
-      },
-      {
-        type:'phone',
-        location:'BLACKTHORN ACADEMY • GRAND STAIR CHECKPOINT',
-        title:'KORTE PRIVÉMOMENTEN',
-        subtitle:'Florine krijgt een privégesprek. Maxine bekijkt het publieke fotobord. Sam heeft het programma en de publieke kaart op haar telefoon.',
-        action:'KLAAR? → GA VERDER'
-      },
-      {type:'transition',from:'GRAND STAIR CHECKPOINT',to:'RECEPTION ARCADE'},
-      {
-        type:'story',
-        location:'BLACKTHORN ACADEMY • RECEPTION ARCADE',
-        kicker:'OP WEG NAAR HET BAL',
-        title:'De muziek uit de Grand Hall wordt luider.',
-        text:'Personeel ruimt de laatste resten van de processie op. De meeste gasten zijn al binnen.'
-      },
-      {
-        type:'phone',
-        location:'BLACKTHORN ACADEMY • RECEPTION ARCADE',
-        title:'SAM — PRIVÉGESPREK',
-        subtitle:'Sam krijgt onderweg een kort privégesprek. Maxine en Florine blijven in de gedeelde ruimte.',
-        action:'SAM KLAAR? → GA VERDER'
-      },
-      {type:'transition',from:'RECEPTION ARCADE',to:'GRAND HALL BALLROOM'}
-    ]
-  },
-  {
-    id:'A2',
-    label:'A2 — Het gemaskerde bal',
-    image:'assets/grand_hall_masked_ball.png',
-    steps:[
-      {
-        type:'story',
-        location:'BLACKTHORN ACADEMY • GRAND HALL BALLROOM',
-        kicker:'THE NIGHT OF THE VEILED MOON',
-        title:'Jullie stappen de balzaal binnen.',
-        text:'Warm koperlicht glijdt over donkere houten balkons. Maskers, avondkleding en oude familiekleuren bewegen door elkaar terwijl een strijkensemble verder speelt.'
-      },
-      {
-        type:'dialogue',
-        location:'BLACKTHORN ACADEMY • GRAND HALL BALLROOM',
-        speaker:'PROFESSOR ALDOUS VEYNE',
-        text:'Als je te laat komt, doe het dan tenminste zo dat iemand het onthoudt. De helft van deze zaal heeft jaren geoefend om stipt onopvallend te zijn.',
-        choices:[
-          {label:'LAAT HEM VERDERGAAN',reply:'Blackthorn houdt het meest van protocol wanneer niemand vraagt welk probleem dat protocol ooit moest oplossen.'}
-        ]
-      },
-      {
-        type:'dialogue',
-        location:'BLACKTHORN ACADEMY • GRAND HALL BALLROOM',
-        speaker:'PROFESSOR ALDOUS VEYNE',
-        text:'Als je deze avond juist wilt onthouden, noteer dan wat mensen zeggen vóór ze weten wat ze achteraf hadden moeten zeggen.',
-        choices:[
-          {label:'LAAT HEM GAAN',reply:'Veyne knikt kort, neemt zijn programma mee en verdwijnt opnieuw tussen de gasten.'}
-        ]
-      },
-      {
-        type:'story',
-        location:'BLACKTHORN ACADEMY • GRAND HALL BALLROOM',
-        kicker:'ENKELE MOMENTEN LATER',
-        title:'Bij een ceremoniële maskerdisplay staat een vrouw een losgeraakt lint recht te leggen.',
-        text:'Onder haar arm zit een donkere documentenkoffer. Ze kijkt op wanneer jullie dichterbij komen.'
-      },
-      {
-        type:'dialogue',
-        location:'BLACKTHORN ACADEMY • GRAND HALL BALLROOM',
-        speaker:'PROFESSOR CELESTE ROOK',
-        text:'Welkom op Blackthorn. Geloof niemand die beweert dat Founders’ Week normaal rustiger verloopt. Die persoon beschermt het merk.',
-        choices:[
-          {label:'VRAAG WAT ZE DOCEERT',reply:'Ritual History. In de praktijk betekent dat vooral aantonen dat tradities ooit praktische beslissingen van vermoeide mensen waren.'},
-          {label:'VRAAG OF ZE VAN HET BAL GENIET',reply:'In zorgvuldig afgemeten porties. Ik verkies de momenten waarop mensen even vergeten dat ze een familienaam vertegenwoordigen.'},
-          {label:'ANTWOORD IN JE EIGEN WOORDEN',reply:'Dan laat ik jouw woorden staan.'}
-        ]
-      },
-      {
-        type:'phone',
-        location:'BLACKTHORN ACADEMY • GRAND HALL BALLROOM',
-        title:'DE ZAAL GAAT OPEN',
-        subtitle:'Jullie hoeven nu niet naast elkaar te blijven. Op de drie telefoons lopen korte persoonlijke gesprekken tegelijk. De beamer blijft de gedeelde balzaal.',
-        action:'IEDEREEN KLAAR? → GA VERDER'
-      },
-      {
-        type:'activity',
-        location:'BLACKTHORN ACADEMY • GRAND HALL BALLROOM',
-        kicker:'REGROUP — KORT EN NIET-BLOKKEREND',
-        title:'Wat doen jullie nog even samen?',
-        choices:['GROEPSFOTO','MASKERDISPLAY','IETS DRINKEN','KIJK ROND'],
-        confirmation:'Prima. Het bal gaat verder.'
-      },
-      {
-        type:'story',
-        location:'BLACKTHORN ACADEMY • GRAND HALL BALLROOM',
-        kicker:'LATER OP DE AVOND',
-        title:'De muziek speelt verder.',
-        text:'Gesprekken verschuiven door de zaal. Glazen worden bijgevuld. Niemand in de balzaal weet dat de avond op het punt staat volledig te veranderen.'
-      }
-    ]
-  },
-  {
-    id:'A3',
-    label:'A3 — De onderbreking',
-    image:'assets/observatory_gallery_night.png',
-    steps:[
-      {
-        type:'interrupt',
-        location:'BLACKTHORN ACADEMY • GRAND HALL BALLROOM',
-        kicker:'FOUNDERS’ WEEK',
-        title:'PROGRAMMA ONDERBROKEN',
-        subtitle:'De muziek stopt midden in een passage.'
-      },
-      {
-        type:'story',
-        location:'BLACKTHORN ACADEMY • GRAND HALL BALLROOM',
-        kicker:'ONRUST IN DE ZAAL',
-        title:'Personeel sluit een deel van de Academy af.',
-        text:'Gasten worden uit doorgangen gehouden. Een boodschap van de Headmistress gaat door de zaal: iedereen blijft beschikbaar voor vragen.'
-      },
-      {type:'transition',from:'GRAND HALL BALLROOM',to:'OBSERVATORY GALLERY'},
-      {
-        type:'story',
-        location:'BLACKTHORN ACADEMY • OBSERVATORY GALLERY',
-        kicker:'BEPERKTE ZONE',
-        title:'De gallery is afgezet.',
-        text:'Staff bewaakt de toegang. Jullie blijven aan de buitenzijde van de gemarkeerde inspectiezone tot de Headmistress naar jullie toekomt.'
-      },
-      {
-        type:'dialogue',
-        location:'BLACKTHORN ACADEMY • OBSERVATORY GALLERY',
-        speaker:'HEADMISTRESS BLACKTHORN',
-        text:'Jullie staan in de late registratie en op publiek eventmateriaal. Dat maakt jullie bruikbaar als onafhankelijke getuigen.',
-        choices:[
-          {label:'LUISTER VERDER',reply:'Jullie krijgen een beperkte incidentmap. Als jullie een conclusie trekken, wil ik de bron erbij zien.'}
-        ]
-      },
-      {
-        type:'phone',
-        location:'BLACKTHORN ACADEMY • OBSERVATORY GALLERY',
-        title:'INCIDENT DOSSIER ONTGRENDELD',
-        subtitle:'Open het dossier op jullie telefoon. De eerste vrijgegeven bronkaarten verschijnen daar.',
-        action:'DOSSIER GEOPEND? → GA VERDER'
-      },
-      {
-        type:'dialogue',
-        location:'BLACKTHORN ACADEMY • OBSERVATORY GALLERY',
-        speaker:'HEADMISTRESS BLACKTHORN',
-        text:'Voor de inspectie begint, mogen jullie één vraag stellen.',
-        choices:[
-          {label:'VRAAG NAAR TOEGANG TOT AFGESLOTEN ZONES',reply:'Toegang is verspreid over credentials, fysieke sleutels en tijdelijke uitgiftes. Jullie krijgen de registers die voor deze incidentmap zijn vrijgegeven.'},
-          {label:'VRAAG NAAR DE ONTDEKKING',reply:'De gallery is na de onderbreking gecontroleerd en vervolgens afgesloten. De eerste scènebeschrijving blijft zoals ze werd aangetroffen.'},
-          {label:'VRAAG WAAROM JULLIE DOSSIERTOEGANG KRIJGEN',reply:'Omdat jullie onafhankelijk van de Academy-structuur zijn en al vóór de lockdown in meerdere publieke ruimtes geregistreerd stonden.'},
-          {label:'STEL ZELF EEN VRAAG',reply:'Als het bevestigd is in de incidentmap, krijgen jullie de bron. Wat niet bevestigd is, vul ik niet in.'}
-        ]
-      },
-      {
-        type:'story',
-        location:'BLACKTHORN ACADEMY • OBSERVATORY GALLERY',
-        kicker:'DE HEADMISTRESS STAPT OPZIJ',
-        title:'Jullie mogen de afgebakende scène bekijken.',
-        text:'Niets aanraken. Gebruik de Details-lijst op het volgende scherm om de drie zichtbare objecten één voor één te openen.'
-      }
-    ]
-  },
-  {
-    id:'A4',
-    label:'A4 — Scène-inspectie',
-    image:'assets/investigation_scene_wide.png',
-    steps:[
-      {
-        type:'details',
-        location:'BLACKTHORN ACADEMY • OBSERVATORY GALLERY • BEPERKTE INSPECTIE',
-        title:'BEKIJK DE ZICHTBARE DETAILS',
-        details:[
-          {title:'BRANDYGLAS',body:'Helder drinkglas. Kleine hoeveelheid amberkleurige vloeistof. Geen zichtbare breuk.'},
-          {title:'CEREMONIEEL MASKER',body:'Ceremonieel masker naast Veyne. Gelakte buitenzijde. De sluiting is zichtbaar.'},
-          {title:'WYCLIFFE-REFERENTIEBLAD',body:'Archief-/Council-referentieblad met Wycliffe-identificatie.'}
-        ]
-      },
-      {
-        type:'story',
-        location:'BLACKTHORN ACADEMY • OBSERVATORY GALLERY',
-        kicker:'INSPECTIE VOLTOOID',
-        title:'Jullie hebben de drie zichtbare objecten bekeken.',
-        text:'De objectbeschrijvingen worden aan het gedeelde dossier toegevoegd. De Headmistress laat jullie daarna naar een aparte interviewruimte brengen.'
-      },
-      {type:'transition',from:'OBSERVATORY GALLERY',to:'INCIDENT INTERVIEW ROOM'}
-    ]
-  },
-  {
-    id:'A5',
-    label:'A5 — Eerste onderzoeksronde',
-    image:'assets/grand_hall_side_room.png',
-    steps:[
-      {
-        type:'story',
-        location:'BLACKTHORN ACADEMY • INCIDENT INTERVIEW ROOM',
-        kicker:'EERSTE ONDERZOEKSRONDE',
-        title:'De deur valt achter jullie dicht.',
-        text:'Op tafel liggen drie lege dossiermappen. Gideon Bell zit tegenover jullie met zijn papieren logboek en een ondertekende verklaring.'
-      },
-      {
-        type:'dialogueMulti',
-        location:'BLACKTHORN ACADEMY • INCIDENT INTERVIEW ROOM',
-        speaker:'GIDEON BELL',
-        text:'Ik hield de late processie bij en werkte daarna verder bij Event Logistics. Vraag per onderwerp; dan hou ik mijn eigen herinnering en het papier uit elkaar.',
-        topics:[
-          {label:'LATE AANKOMST',reply:'Dit is het papieren log van het checkpoint. Ik heb het zelf ingevuld.',doneLabel:'LOG TOEGEVOEGD'},
-          {label:'DIENSTBEWEGINGEN',reply:'Dit is mijn getekende sightline-verklaring. Ze zegt alleen wat ik vanaf mijn route kon zien.',doneLabel:'VERKLARING TOEGEVOEGD'},
-          {label:'MASK STATION',reply:'Voor het Mask Station bestaan aparte eventrecords. Die bron zit niet in mijn getuigenverklaring.',doneLabel:'BEANTWOORD'},
-          {label:'STEL ZELF EEN VRAAG',reply:'Als ik het zelf gezien of geregistreerd heb, geef ik de bron. Anders zeg ik dat ik het niet weet.',doneLabel:'BEANTWOORD'}
-        ],
-        required:['LATE AANKOMST','DIENSTBEWEGINGEN']
-      },
-      {
-        type:'story',
-        location:'BLACKTHORN ACADEMY • INCIDENT INTERVIEW ROOM',
-        kicker:'GIDEON STAAT OP',
-        title:'Voor hij vertrekt, schuift hij twee documenten naar jullie toe.',
-        text:'Het late-processielog en zijn getekende verklaring worden aan het dossier toegevoegd.'
-      },
-      {
-        type:'archives',
-        location:'BLACKTHORN ACADEMY • INCIDENT INTERVIEW ROOM',
-        title:'KIES ÉÉN ARCHIEF VOOR DEZE RONDE',
-        subtitle:'De andere bron verdwijnt niet. Jullie krijgen er later nog toegang toe.',
-        archives:[
-          {title:'EVENT PHOTOGRAPHY',subtitle:'Isolde Maren — chronologisch eventalbum',reply:'Isolde opent het chronologische eventalbum. “Geef me een tijdvak, geen theorie.”'},
-          {title:'EVENT LOGISTICS',subtitle:'Alleen-lezen eventrecords',reply:'De vrijgegeven logistieke eventrecords worden geopend.'}
-        ]
-      },
-      {
-        type:'phone',
-        location:'BLACKTHORN ACADEMY • INCIDENT INTERVIEW ROOM',
-        title:'CHECK JULLIE DOSSIER',
-        subtitle:'Bekijk wat jullie nu bezitten. Bewaar privé wat privé is en deel alleen wat jullie zelf willen delen.',
-        action:'KLAAR VOOR DE RECONSTRUCTIE? → GA VERDER'
-      },
-      {
-        type:'title',
-        location:'BLACKTHORN ACADEMY • INCIDENT INTERVIEW ROOM',
-        kicker:'EERSTE ONDERZOEKSRONDE AFGEROND',
-        title:'De avond ligt nu in stukken voor jullie.',
-        subtitle:'De volgende stap is niet raden wie liegt. Eerst moeten jullie reconstrueren wanneer de registraties werkelijk op elkaar aansluiten.'
-      }
-    ]
-  }
-];
-
-let sceneIndex=0, stepIndex=0;
+const META=window.BLACKTHORN_META||{caseEvidence:{},evidenceLabels:{},puzzleGates:{}};
 const root=document.getElementById('projector');
-const gm=document.getElementById('gmPanel');
-const jump=document.getElementById('sceneJump');
-
-SCENES.forEach((s,i)=>jump.add(new Option(s.label,i)));
-jump.onchange=()=>{sceneIndex=+jump.value;stepIndex=0;render()};
-document.getElementById('gmClose').onclick=()=>gm.hidden=true;
-document.getElementById('prevStep').onclick=()=>prev();
-document.getElementById('nextStep').onclick=()=>next();
-document.getElementById('resetScene').onclick=()=>{stepIndex=0;render()};
-
-window.addEventListener('keydown',e=>{
-  if(e.key.toLowerCase()==='g' && !/input|textarea|select/i.test(document.activeElement?.tagName||'')) gm.hidden=!gm.hidden;
-  if(e.key==='ArrowRight' && gm.hidden) next();
-  if(e.key==='ArrowLeft' && gm.hidden) prev();
-});
-
-function current(){return SCENES[sceneIndex]}
-function step(){return current().steps[stepIndex]}
-function safe(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-
-function stageOpen(s){
-  return `<section class="stage" style="background-image:url('${current().image}')"><div class="wrap"><div class="location">${safe(s.location||'BLACKTHORN ACADEMY')}</div><div class="main">`;
+const DEBUG=new URLSearchParams(location.search).get('debug')==='1';
+const syncChannel=('BroadcastChannel' in window)?new BroadcastChannel('blackthorn-v63-sync'):null;
+let SCENES=[],i=Number(localStorage.getItem('bt-proj-scene')||0);
+const BEGIN_DETAILS={
+ S01:{
+  UITNODIGINGEN:{title:'Drie persoonlijke uitnodigingen',body:'Drie crèmekleurige kaarten dragen elk een eigen naam. Onderaan staat: Persoonlijke uitnodiging vereist bij de Grand Stair.'},
+  PROGRAMMA:{title:'Foundersweek-programma',body:'Ontbijt, lessen en avondprogramma staan op één gevouwen kaart. De Night of the Veiled Moon begint vanavond in de Grand Hall.'},
+  KAART:{title:'Campuskaart',body:'De publieke studentenroutes zijn duidelijk gemarkeerd. Service-, Council- en archiefroutes staan niet als gewone studentenroute aangegeven.'},
+  MASKERDOZEN:{title:'Maskerdozen',body:'Drie gesloten dozen liggen naast de kledinghoezen. Elke doos is al op naam gelabeld.'},
+  RAAM:{title:'Suite 417 — raam',body:'Regen hangt boven de binnenplaats. Beneden worden vlaggen en lantaarns voor Foundersweek vastgezet.'},
+  GROEPSFOTO:{title:'Groepsfoto',body:'Een foto van jullie drie staat tussen boeken en losse papieren. Geen dossierstuk. Gewoon van jullie.'}
+ },
+ S03:{
+  KAMERHOTSPOTS:{title:'Suite 417',body:'Kledinghoezen open. Maskerdozen op tafel. De Academy-klok blijft hier zichtbaar.'},
+  ACCESSOIRE:{title:'Vaste baloutfits',body:'De outfits liggen volledig klaar. Er is niets te kiezen of te optimaliseren; alleen aantrekken en spullen meenemen.'},
+  GROEPSFOTO:{title:'Voor vertrek',body:'De kamer is klaar voor een laatste foto vóór jullie naar beneden gaan.'}
+ }
+};
+const REQUIRED_INTERACTIONS={S01:['UITNODIGINGEN'],S03:['KAMERHOTSPOTS']};
+const IMAGES=(window.BLACKTHORN_ASSETS&&window.BLACKTHORN_ASSETS.scenes)||{};
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function split(s){
+  const v=String(s||'');
+  const sep=v.includes('||')?'||':'|';
+  return v.split(sep).map(x=>x.trim()).filter(Boolean);
 }
-
-function foot(extra=''){
-  const dots=current().steps.map((_,i)=>`<i class="dot ${i===stepIndex?'active':''}"></i>`).join('');
-  return `</div><div class="footer"><div class="progress">${dots}</div><div class="hint">${extra||'← → volgende/vorige • G = GM'}</div></div></div></section>`;
+function arrows(s){return split(s).map(x=>{const a=x.split('->');return{label:(a.shift()||'').trim(),reply:a.join('->').trim()}})}
+function owned(){try{return JSON.parse(localStorage.getItem('bt-owned-evidence')||'[]')}catch{return[]}}
+function evidenceHTML(id){
+ const e=window.BLACKTHORN_EVIDENCE?.[id];if(!e)return '<article class="evidenceDoc"><h3>'+esc(META.evidenceLabels[id]||id.replaceAll('_',' '))+'</h3></article>';
+ let h='<article class="evidenceDoc"><h3>'+esc(e.title)+'</h3>';
+ if(e.subtitle)h+='<p class="evidenceSubtitle">'+esc(e.subtitle)+'</p>';
+ if(e.blocks)h+='<dl>'+e.blocks.map(x=>'<div><dt>'+esc(x[0])+'</dt><dd>'+esc(x[1])+'</dd></div>').join('')+'</dl>';
+ if(e.sections)h+=e.sections.map(s=>'<section><h4>'+esc(s[0])+'</h4>'+s[1].map(x=>'<p>'+esc(x)+'</p>').join('')+'</section>').join('');
+ if(e.list)h+='<ul>'+e.list.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>';
+ if(e.quote)h+='<blockquote>'+esc(e.quote)+'</blockquote>';
+ if(e.quotes)h+=e.quotes.map(q=>'<blockquote>'+esc(q)+'</blockquote>').join('');
+ if(e.table)h+='<div class="evidenceTableWrap"><table><thead><tr>'+e.table.headers.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+e.table.rows.map(r=>'<tr>'+r.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+ if(e.footer)h+='<footer>'+esc(e.footer)+'</footer>';return h+'</article>';
 }
-
+function addEvidence(ids){const set=new Set(owned());ids.forEach(x=>set.add(x));localStorage.setItem('bt-owned-evidence',JSON.stringify([...set]));syncChannel?.postMessage({type:'evidence',ids:[...set]})}
+function gateReady(m){const g=META.puzzleGates[m];if(!g)return true;const set=new Set(owned());return(g.all||[]).every(x=>set.has(x))&&(!(g.any||[]).length||(g.any||[]).some(a=>a.every(x=>set.has(x))))}
+function flowIds(s){return String(s.phone_flow_ids||'').split('|').map(x=>x.trim()).filter(Boolean)}
+function effectiveWindow(s){
+  if(s.window)return s.window;
+  const ids=flowIds(s);
+  if(ids.includes('P036'))return 'B23';
+  if(ids.some(x=>['P025','P026A','P026B','P026C'].includes(x)))return 'HAZARD';
+  return '';
+}
+function unlockThroughScene(){
+  const ids=new Set();
+  for(let n=0;n<=i;n++)flowIds(SCENES[n]).forEach(x=>ids.add(x));
+  ids.add('P001');
+  localStorage.setItem('bt-unlocked-flows',JSON.stringify([...ids]));
+}
+function syncStage(s){
+  localStorage.setItem('bt-global-stage',s.stage);
+  localStorage.setItem('bt-global-window',effectiveWindow(s));
+  unlockThroughScene();
+  syncChannel?.postMessage({type:'stage',stage:s.stage,window:effectiveWindow(s)});
+}
+function maxineState(){try{return JSON.parse(localStorage.getItem('blackthorn-state-maxine')||'{}')}catch{return{}}}
+function resolveB23(){
+  const st=maxineState(),t=Number(st.theo_engagement||0),a=Number(st.adrian_engagement||0);
+  if(Math.abs(t-a)>=2&&!st.b23_route){st.b23_route=t>a?'Theo':'Adrian';localStorage.setItem('blackthorn-state-maxine',JSON.stringify(st))}
+  return st.b23_route||'';
+}
+function readyStatus(s){
+  const w=effectiveWindow(s); if(!w||!/^W\d/.test(w))return '';
+  const chars=['florine','sam','maxine'];
+  const count=chars.filter(k=>localStorage.getItem('bt-ready-'+w+'-'+k)==='1').length;
+  return `${count}/3 KLAAR`;
+}
+function safeText(s){
+  const v=String(s||'');
+  if(/(?:FINAL_REVEAL_BLOCK|PRIVATE_CONSEQUENCE_BLOCK|_GM_\d+)/.test(v))return '';
+  return v;
+}
+function bg(s){return '../'+(IMAGES[s.scene_id]||'assets/florine/photos/Rainy-Gothic-Manor-Arrival.png')}
+function progressKey(scene){return 'bt-scene-progress-'+scene}
+function sceneProgress(scene){try{return JSON.parse(localStorage.getItem(progressKey(scene))||'[]')}catch{return[]}}
+function markProgress(scene,label){const s=new Set(sceneProgress(scene));s.add(label);localStorage.setItem(progressKey(scene),JSON.stringify([...s]))}
+function requirementsDone(s){
+  const req=REQUIRED_INTERACTIONS[s.scene_id]||[],seen=new Set(sceneProgress(s.scene_id));
+  const base=req.every(x=>seen.has(x));
+  const puzzleOK=!s.puzzle_marker||(window.BlackthornPuzzles&&BlackthornPuzzles.isComplete(s.puzzle_marker));
+  const accusationOK=s.scene_id!=='S26'||(window.BlackthornAccusation&&BlackthornAccusation.isLocked());
+  const protectedOK=s.scene_id!=='S27'||localStorage.getItem('bt-protected-finale-linked')==='1';
+  return base&&puzzleOK&&accusationOK&&protectedOK;
+}
+function accusationPanelHTML(){
+  if(!window.BlackthornAccusation||localStorage.getItem('bt-p4-board')!=='1')return '<div class="finalePanel"><b>ACCUSATION</b><p>Theory board nog niet voltooid.</p></div>';
+  const A=BlackthornAccusation,s=A.state(),count=A.votes(s.round).length;
+  if(s.phase==='locked')return '<div class="finalePanel locked"><b>BESCHULDIGING VERGRENDELD</b><h3>'+esc(s.locked.accused)+'</h3><p>De steunkaarten en stemgeschiedenis zijn opgeslagen.</p></div>';
+  if(['voting','final_vote'].includes(s.phase))return '<div class="finalePanel"><b>VERBORGEN STEMRONDE '+s.round+'</b><h3>'+count+'/3 ingediend</h3><p>Stemmen blijven verborgen tot iedereen heeft ingediend.</p></div>';
+  if(s.phase==='minority_decision')return '<div class="finalePanel"><b>GROEPSPROTOCOL</b><h3>Er is een 2–1 voorstel.</h3><p>Wacht op de minderheidsbeslissing.</p></div>';
+  if(s.phase==='confirmer_pick')return '<div class="finalePanel"><b>GROEPSPROTOCOL</b><h3>Drie verschillende stemmen.</h3><p>De roterende confirmer kiest welke beschuldiging eerst besproken wordt.</p></div>';
+  if(s.phase==='final_elimination')return '<div class="finalePanel"><b>FINAL BALLOT</b><h3>Drie opties bleven verdeeld.</h3><p>De confirmer verwijdert één optie uit het laatste stembiljet.</p></div>';
+  if(s.phase==='discussion'){
+    const sec=Math.max(0,Math.ceil((Number(s.discussionEnds||0)-Date.now())/1000));
+    return '<div class="finalePanel"><b>OPEN DISCUSSIE</b><h3 id="discussionClock">'+sec+'s</h3><p>Bespreek alleen wat al in jullie dossier en theory board staat.</p><button id="startNextVote" '+(sec>0?'disabled':'')+'>START VOLGENDE VERBORGEN STEM</button></div>';
+  }
+  return '';
+}
+function save(){localStorage.setItem('bt-proj-scene',String(i))}
+function next(){const s=SCENES[i];if(s&&!requirementsDone(s))return;if(i<SCENES.length-1){i++;save();render()}}
+function prev(){if(i>0){i--;save();render()}}
 function render(){
-  jump.value=sceneIndex;
-  const s=step();
-  if(!s)return;
-
-  if(s.type==='title'||s.type==='interrupt'){
-    root.innerHTML=stageOpen(s)+`<div class="scene-kicker">${safe(s.kicker||'')}</div><h1 class="title">${safe(s.title)}</h1><p class="subtitle">${safe(s.subtitle||'')}</p>`+foot();
-  }
-  if(s.type==='story'){
-    root.innerHTML=stageOpen(s)+`<div class="scene-kicker">${safe(s.kicker||'')}</div><h1 class="title">${safe(s.title||'')}</h1><p class="subtitle">${safe(s.text||'')}</p>`+foot();
-  }
-  if(s.type==='transition'){
-    root.innerHTML=`<section class="stage no-image"><div class="wrap"><div></div><div class="main transition"><div class="small">JULLIE VERLATEN</div><div class="big">${safe(s.from)}</div><div class="small">VOLGENDE LOCATIE</div><div class="big">${safe(s.to)}</div></div><div class="footer"><div></div><div class="hint">← → volgende/vorige • G = GM</div></div></div></section>`;
-  }
-  if(s.type==='dialogue') renderDialogue(s);
-  if(s.type==='dialogueMulti') renderDialogueMulti(s);
-  if(s.type==='phone') renderPhone(s);
-  if(s.type==='activity') renderActivity(s);
-  if(s.type==='details') renderDetails(s);
-  if(s.type==='archives') renderArchives(s);
+ const s=SCENES[i];if(!s)return;syncStage(s);
+ const interactions=arrows(s.shared_interactions),caseIds=META.caseEvidence[s.case_key]||[],ready=s.puzzle_marker?gateReady(s.puzzle_marker):true;
+ let reactions=safeText(s.npc_and_shared_reactions);
+ if(s.scene_id==='S22'){
+   const route=resolveB23(),parts=split(reactions),base=parts.filter(x=>x.startsWith('AIDE:'));
+   const chosen=route==='Theo'?parts.filter(x=>x.startsWith('THEO-VARIANT:')):route==='Adrian'?parts.filter(x=>x.startsWith('ADRIAN-VARIANT:')):route==='none'?parts.filter(x=>x.startsWith('SUPERVISOR-VARIANT:')):[];
+   reactions=[...base,...chosen].join(' || ');
+ }
+ root.innerHTML=`<section class="stage" style="background-image:linear-gradient(90deg,rgba(4,6,9,.89),rgba(4,6,9,.48)),url('${bg(s)}')">
+ <div class="chrome"><div>${esc(s.scene_id)} · ${esc(s.stage)}</div><div>${i+1}/${SCENES.length}</div></div>
+ <div class="content"><div class="location">${esc(s.display_location||'BLACKTHORN ACADEMY')}</div>
+ ${s.scene_id==='S03'?'<div class="academyClock" id="academyClock">19:35</div>':''}
+ ${s.kicker?`<div class="kicker">${esc(s.kicker)}</div>`:''}${s.title?`<h1>${esc(s.title)}</h1>`:''}${safeText(s.player_body)?`<p class="body">${esc(safeText(s.player_body))}</p>`:''}
+ ${reactions?`<div class="dialogue">${split(reactions).map(x=>`<p>${esc(x)}</p>`).join('')}</div>`:''}
+ ${s.shared_interactions?`<div class="choices">${interactions.map((x,n)=>`<button data-c="${n}">${esc(x.label)}</button>`).join('')}</div>`:''}
+ ${caseIds.length&&s.scene_id!=='S24C'?`<button class="sourceButton" id="openSource">OPEN VRIJGEGEVEN BRON</button>`:''}
+ ${s.puzzle_marker&&window.BlackthornPuzzles?BlackthornPuzzles.button(s.puzzle_marker,ready):''}
+ ${effectiveWindow(s)&&/^W\d/.test(effectiveWindow(s))?`<div class="tag">PRIVÉVENSTER ${esc(effectiveWindow(s))} · telefoons · ${esc(readyStatus(s))}</div>`:''}
+ ${s.scene_id==='S22'&&!resolveB23()?`<div class="tag waiting">MAXINE · ROUTEKEUZE OP TELEFOON</div>`:''}
+ ${s.scene_id==='S26'?accusationPanelHTML():''}
+ ${s.team_task_sequence?`<div class="team"><b>TEAMTAKEN</b>${split(s.team_task_sequence).map(x=>`<p>${esc(x)}</p>`).join('')}</div>`:''}
+ ${s.puzzle_marker?`<div class="tag ${ready?'ready':'waiting'}">DOSSIERSTAP · ${esc(s.puzzle_marker.replace('_READY',''))} · ${ready?'GEREED':'NOG NIET GEREED'}</div>`:''}
+ ${s.pause_after?`<div class="tag pause">PAUZE · ${esc(s.pause_after.replace('_OPTIONAL',''))}</div>`:''}
+ ${!requirementsDone(s)?'<div class="requirement">Bekijk eerst het vereiste onderdeel in deze scène.</div>':''}</div>
+ <div class="nav"><button id="prev">←</button>${DEBUG?`<select id="jump">${SCENES.map((x,n)=>`<option value="${n}" ${n===i?'selected':''}>${esc(x.scene_id)} · ${esc(x.title||x.stage)}</option>`).join('')}</select>`:`<div class="navLabel">${esc(s.display_location||s.stage)}</div>`}<button id="next" ${requirementsDone(s)?'':'disabled'}>→</button></div></section>`;
+ document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{
+   const c=interactions[+b.dataset.c], label=c.label.trim();
+   const detail=BEGIN_DETAILS[s.scene_id]?.[label];
+   markProgress(s.scene_id,label);
+   if(detail){
+     const o=document.createElement('div');o.className='overlay';o.innerHTML=`<div class="modal"><div class="kicker">BLACKTHORN</div><h2>${esc(detail.title)}</h2><p class="modalBody">${esc(detail.body)}</p><button id="closeDetail">SLUIT</button></div>`;
+     document.body.appendChild(o);document.getElementById('closeDetail').onclick=()=>{o.remove();render()};return;
+   }
+   if(c.reply){let box=document.querySelector('.choiceReply');if(!box){box=document.createElement('div');box.className='choiceReply';document.querySelector('.choices').after(box)}box.textContent=c.reply}
+   else render();
+ });
+ const src=document.getElementById('openSource');if(src)src.onclick=()=>openSource(caseIds,s.case_key);
+ if(s.puzzle_marker&&window.BlackthornPuzzles)BlackthornPuzzles.bind(s.puzzle_marker,ready,()=>render());
+ document.getElementById('prev').onclick=prev;document.getElementById('next').onclick=next;
+ const jump=document.getElementById('jump');if(jump)jump.onchange=e=>{i=+e.target.value;save();render()};
+ const voteBtn=document.getElementById('startNextVote');if(voteBtn)voteBtn.onclick=()=>{if(BlackthornAccusation.startNextVote())render()};
+ if(s.scene_id==='S26'&&window.BlackthornAccusation&&BlackthornAccusation.state().phase==='discussion'){
+   const end=Number(BlackthornAccusation.state().discussionEnds||0);
+   clearTimeout(window.__btDiscussionTimer);window.__btDiscussionTimer=setTimeout(()=>render(),Math.max(250,end-Date.now()+50));
+ }
+ const clock=document.getElementById('academyClock');if(clock){const seen=sceneProgress('S03').length;clock.textContent=['19:35','19:44','19:57','20:06','20:14'][Math.min(seen,4)]}
 }
-
-function renderDialogue(s){
-  root.innerHTML=stageOpen(s)+
-    `<div class="dialogue-card"><div class="speaker">${safe(s.speaker)}</div><p class="quote">“${safe(s.text)}”</p></div>
-     <div class="choices">${s.choices.map((c,i)=>`<button class="choice ${s.choices.length===1?'wide':''}" data-choice="${i}">${safe(c.label)}</button>`).join('')}</div>`+
-    foot('Kies één reactie');
-
-  root.querySelectorAll('[data-choice]').forEach(b=>b.onclick=()=>{
-    const c=s.choices[+b.dataset.choice];
-    root.querySelector('.dialogue-card').innerHTML=`<div class="speaker">${safe(s.speaker)}</div><p class="quote">“${safe(c.reply)}”</p>`;
-    root.querySelector('.choices').innerHTML=`<button class="choice wide" id="continueChoice">GA VERDER →</button>`;
-    document.getElementById('continueChoice').onclick=next;
-  });
+function openSource(ids,key){
+ addEvidence(ids);const o=document.createElement('div');o.className='overlay';o.innerHTML=`<div class="modal evidenceModal"><div class="kicker">VRIJGEGEVEN DOSSIER</div><h2>${esc(key)}</h2><div class="sourceCards">${ids.map(id=>`<button class="sourceCard" data-source-id="${id}"><small>TOEGEVOEGD</small><b>${esc(META.evidenceLabels[id]||id.replaceAll('_',' '))}</b></button>`).join('')}</div><div id="sourceDetail"></div><button id="closeSource">SLUIT</button></div>`;document.body.appendChild(o);document.querySelectorAll('[data-source-id]').forEach(b=>b.onclick=()=>{document.getElementById('sourceDetail').innerHTML=evidenceHTML(b.dataset.sourceId)});document.getElementById('closeSource').onclick=()=>{o.remove();render()}
 }
-
-function renderDialogueMulti(s){
-  const opened=new Set();
-  root.innerHTML=stageOpen(s)+
-    `<div class="dialogue-card"><div class="speaker">${safe(s.speaker)}</div><p class="quote">“${safe(s.text)}”</p></div>
-     <div class="choices">${s.topics.map((c,i)=>`<button class="choice" data-topic="${i}">${safe(c.label)}</button>`).join('')}</div>`+
-    foot('Open de onderwerpen die jullie willen bespreken');
-
-  root.querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>{
-    const c=s.topics[+b.dataset.topic];
-    opened.add(c.label);
-    b.classList.add('used');
-    b.textContent=c.doneLabel||'GEOPEND';
-    root.querySelector('.dialogue-card').innerHTML=`<div class="speaker">${safe(s.speaker)}</div><p class="quote">“${safe(c.reply)}”</p>`;
-    const ready=(s.required||[]).every(x=>opened.has(x));
-    if(ready && !document.getElementById('multiContinue')){
-      const holder=root.querySelector('.choices');
-      const go=document.createElement('button');
-      go.id='multiContinue';go.className='choice wide';go.textContent='INTERVIEW AFRONDEN →';
-      go.onclick=next;holder.appendChild(go);
-    }
-  });
+async function init(){
+ try{const r=await fetch('../production/v63/BLACKTHORN_SCENE_TABLE_V6_3_AUTHORITATIVE_GM_ONLY.csv',{cache:'no-store'});SCENES=btParseCsv(await r.text());i=Math.max(0,Math.min(i,SCENES.length-1));render()}
+ catch(e){root.innerHTML=`<div class="loadError"><h1>Projector kon niet laden</h1><p>${esc(e.message)}</p></div>`;console.error(e)}
 }
-
-function renderPhone(s){
-  root.innerHTML=stageOpen(s)+
-    `<div class="scene-kicker">PRIVÉ OP TELEFOONS</div><h1 class="title">${safe(s.title)}</h1><p class="subtitle">${safe(s.subtitle)}</p>
-     <div class="choices"><button class="choice wide" id="phoneDone">${safe(s.action||'KLAAR →')}</button></div>`+
-    foot('De beamer wacht; privé-inhoud blijft op de telefoons');
-  document.getElementById('phoneDone').onclick=next;
-}
-
-function renderActivity(s){
-  root.innerHTML=stageOpen(s)+
-    `<div class="scene-kicker">${safe(s.kicker||'')}</div><h1 class="title">${safe(s.title)}</h1>
-     <div class="choices">${s.choices.map((x,i)=>`<button class="choice" data-activity="${i}">${safe(x)}</button>`).join('')}</div>`+
-    foot('Kies één; dit blokkeert het verhaal niet');
-
-  root.querySelectorAll('[data-activity]').forEach(b=>b.onclick=()=>{
-    root.querySelectorAll('[data-activity]').forEach(x=>x.classList.remove('used'));
-    b.classList.add('used');
-    showModal('KEUZE GEMAAKT',s.confirmation||'Ga verder wanneer jullie klaar zijn.',true);
-  });
-}
-
-function renderDetails(s){
-  const seen=new Set();
-  root.innerHTML=stageOpen(s)+
-    `<div class="scene-kicker">BEPERKTE INSPECTIE</div><h1 class="title">${safe(s.title)}</h1>
-     <div class="details">${s.details.map((d,i)=>`<button class="detail" data-detail="${i}"><b>${safe(d.title)}</b><p>OPEN DETAIL</p></button>`).join('')}</div>`+
-    foot('Open alle drie de zichtbare details');
-
-  root.querySelectorAll('[data-detail]').forEach(b=>b.onclick=()=>{
-    const i=+b.dataset.detail,d=s.details[i];
-    seen.add(i);b.classList.add('done');b.querySelector('p').textContent=d.body;
-    if(seen.size===s.details.length && !document.getElementById('detailContinue')){
-      const go=document.createElement('button');go.id='detailContinue';go.className='choice wide';go.textContent='INSPECTIE AFRONDEN →';go.onclick=next;
-      const holder=document.createElement('div');holder.className='choices';holder.appendChild(go);root.querySelector('.main').appendChild(holder);
-    }
-  });
-}
-
-function renderArchives(s){
-  root.innerHTML=stageOpen(s)+
-    `<div class="scene-kicker">EERSTE ONDERZOEKSRONDE</div><h1 class="title">${safe(s.title)}</h1>
-     <p class="subtitle">${safe(s.subtitle||'')}</p>
-     <div class="archive-grid">${s.archives.map((a,i)=>`<button class="archive" data-archive="${i}"><h3>${safe(a.title)}</h3><p>${safe(a.subtitle)}</p></button>`).join('')}</div>`+
-    foot('Kies één archief');
-
-  root.querySelectorAll('[data-archive]').forEach(b=>b.onclick=()=>{
-    const a=s.archives[+b.dataset.archive];
-    root.querySelectorAll('[data-archive]').forEach(x=>x.disabled=true);
-    showModal(a.title,a.reply,true);
-  });
-}
-
-function showModal(title,body,continueAfter=false){
-  const o=document.createElement('div');o.className='overlay';
-  o.innerHTML=`<div class="modal"><h2>${safe(title)}</h2><p>${safe(body)}</p><button>${continueAfter?'GA VERDER →':'SLUIT'}</button></div>`;
-  o.querySelector('button').onclick=()=>{o.remove();if(continueAfter)next()};
-  document.body.appendChild(o);
-}
-
-function next(){
-  if(stepIndex<current().steps.length-1){stepIndex++;render();return}
-  if(sceneIndex<SCENES.length-1){sceneIndex++;stepIndex=0;render()}
-}
-function prev(){
-  if(stepIndex>0){stepIndex--;render();return}
-  if(sceneIndex>0){sceneIndex--;stepIndex=SCENES[sceneIndex].steps.length-1;render()}
-}
-render();
+window.addEventListener('storage',e=>{if(e.key?.startsWith('bt-ready-')||e.key==='blackthorn-state-maxine')render()});
+syncChannel?.addEventListener('message',e=>{if(['ready','route','accusation'].includes(e.data?.type))render()});
+window.addEventListener('blackthorn-accusation',()=>render());
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')prev()});init();
