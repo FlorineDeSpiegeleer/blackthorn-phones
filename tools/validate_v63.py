@@ -13,7 +13,7 @@ def digest(path):
 
 required = [
     "index.html","app.js","styles.css","runtime-data.js","game-meta.js","asset-map.js",
-    "projector/index.html","projector/projector.js","projector/styles.css",
+    "projector/index.html","projector/projector.js","projector/styles.css","projector/puzzle-data.js","projector/puzzles.js",
     "production/v63/BLACKTHORN_SCENE_TABLE_V6_3_AUTHORITATIVE_GM_ONLY.csv",
     "production/v63/BLACKTHORN_PHONE_FLOW_V6_3_IMPLEMENTATION_GM_ONLY.csv",
     "production/v63/IMPLEMENTATION_MANIFEST.json","production/v63/ASSET_PLAN.json"
@@ -49,6 +49,9 @@ checks = {
     "private ready state": "bt-ready-" in app and "bt-ready-" in projector,
     "opaque block shielding": "safeText" in projector and "PRIVATE_CONSEQUENCE_BLOCK" in app,
     "route logic": "b23_route" in app and "w6_route" in app and "resolveB23" in projector,
+    "interactive P1-P4": "openP1" in read("projector/puzzles.js") and "openP2" in read("projector/puzzles.js") and "openP3" in read("projector/puzzles.js") and "openP4" in read("projector/puzzles.js"),
+    "P1 anti-bruteforce": "GETEST DEZE RONDE" in read("projector/puzzles.js") and "VERGELIJKINGSMODUS" in read("projector/puzzles.js"),
+    "P4 inspection gate": "mask-inspection" in read("projector/puzzles.js") and "label_remnant" in read("projector/puzzles.js"),
 }
 for name, ok in checks.items():
     if not ok:
