@@ -38,3 +38,10 @@ The full local V2 build is being transferred incrementally to this branch so the
 4. Run technical smoke tests.
 5. Link protected opaque GM sources and record hashes.
 6. Merge only after final implementation validation.
+
+
+## Asset pass
+- `asset-map.js` is now the single scene-to-image mapping layer.
+- `production/v63/ASSET_PLAN.json` tracks existing, duplicate/review, and still-to-create images.
+- Current GitHub preview may keep using existing repository images until normalized V6.3 assets are uploaded.
+- Do not introduce a love-interest portrait earlier than the approved reveal timing.
