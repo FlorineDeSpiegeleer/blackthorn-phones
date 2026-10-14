@@ -82,14 +82,22 @@ function renderMessages(c){
 }
 function searchIcon(){return '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg>'}
 function lastMessage(thread){const arr=visibleMessages(thread);return arr.length?arr[arr.length-1].text:''}
+function storyChoiceKey(flowId){return `blackthorn-choice-${key}-${flowId}`}
 function renderThread(c,index){
   const t=c.messages?.[index]; if(!t) return renderMessages(c);
   const msgs=visibleMessages(t);
-  shell(t.name||'Conversation',msgs.length?`<div class="conversation">${msgs.map(m=>`<div class="bubbleRow ${m.from==='me'?'mine':'theirs'}"><div class="bubble">${m.from&&m.from!=='me'? `<span class="bubbleSender">${esc(m.from)}</span>` : ''}<p>${esc(m.text||'')}</p>${m.time?`<time>${esc(m.time)}</time>`:''}</div></div>`).join('')}</div>`:empty('No messages','No messages are available at this point.','messages'));
+  const html=msgs.map(m=>{
+    const picked=m.flowId?localStorage.getItem(storyChoiceKey(m.flowId)):'';
+    const choiceHtml=(m.choices||[]).length && picked==='' ? `<div class="replyChoices">${m.choices.map((x,i)=>`<button class="replyChoice" data-flow="${esc(m.flowId)}" data-i="${i}">${esc(x.label)}</button>`).join('')}</div>` : '';
+    const pickedObj=picked!=='' ? (m.choices||[])[Number(picked)] : null;
+    const replyHtml=pickedObj ? `<div class="bubbleRow mine"><div class="bubble choiceReply"><span class="bubbleSender">JOUW KEUZE</span><p>${esc(pickedObj.label)}</p></div></div>${pickedObj.reply?`<div class="bubbleRow theirs"><div class="bubble"><span class="bubbleSender">${esc(m.from||t.name)}</span><p>${esc(pickedObj.reply)}</p></div></div>`:''}` : '';
+    return `<div class="bubbleRow ${m.from==='me'?'mine':'theirs'}"><div class="bubble">${m.from&&m.from!=='me'? `<span class="bubbleSender">${esc(m.from)}</span>` : ''}<p>${esc(m.text||'')}</p>${m.time?`<time>${esc(m.time)}</time>`:''}</div></div>${choiceHtml}${replyHtml}`;
+  }).join('');
+  shell(t.name||'Conversation',msgs.length?`<div class="conversation">${html}</div>`:empty('No messages','No messages are available at this point.','messages'));
   document.getElementById('back').textContent='‹ Messages';
   document.getElementById('back').onclick=()=>renderMessages(c);
+  app.querySelectorAll('.replyChoice').forEach(b=>b.onclick=()=>{localStorage.setItem(storyChoiceKey(b.dataset.flow),b.dataset.i);renderThread(c,index)});
 }
-
 function renderCalls(c){
   const calls=visibleItems(c.calls);
   if(!calls.length) return shell('Calls',empty('No recent calls','There are no calls in the recent history.','calls'));
@@ -320,4 +328,4 @@ function route(){
   }
   renderHome(DATA[key]);
 }
-window.addEventListener('popstate',route);window.addEventListener('pagehide',stopCam);route();
+window.addEventListener('popstate',route);window.addEventListener('pagehide',stopCam);Promise.resolve(window.BLACKTHORN_V63_READY).finally(route);
