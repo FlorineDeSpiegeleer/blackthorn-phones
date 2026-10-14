@@ -44,11 +44,40 @@ function renderHome(){
 function renderApp(id){
   ({messages:renderMessages,photos:renderPhotos,calendar:renderCalendar,map:renderMap,dossier:renderDossier,blackthorn:renderBlackthorn,notes:renderNotes,camera:renderCamera}[id]||renderHome)();
 }
-function visibleRows(){return BUILD.phoneFlow.filter(r=>(r.character==='ALL'||r.character===player.name)&&stageVisible(r.stage)&&condOK(r.condition))}
+function unlockedFlows(){try{return JSON.parse(localStorage.getItem('bt-unlocked-flows')||'["P001"]')}catch{return["P001"]}}
+function activeWindow(){return localStorage.getItem('bt-global-window')||''}
+function resolveRoutes(){
+  if(key!=='maxine')return;
+  const st=state(),t=Number(st.theo_engagement||0),a=Number(st.adrian_engagement||0),w=activeWindow();
+  if(w==='B23' && Math.abs(t-a)>=2 && !st.b23_route){st.b23_route=t>a?'Theo':'Adrian';saveState(st)}
+  if(w==='W6' && t!==a && !st.w6_route){st.w6_route=t>a?'Theo':'Adrian';saveState(st)}
+}
+function visibleRows(){
+  resolveRoutes();
+  const unlocked=new Set(unlockedFlows());
+  return BUILD.phoneFlow.filter(r=>(r.character==='ALL'||r.character===player.name)&&unlocked.has(r.flow_id)&&stageVisible(r.stage)&&condOK(r.condition));
+}
+function w6RouteChooser(){
+  if(key!=='maxine'||activeWindow()!=='W6')return '';
+  const st=state(),t=Number(st.theo_engagement||0),a=Number(st.adrian_engagement||0);
+  if(t!==a||st.w6_route)return '';
+  return '<div class="routeGate"><small>PRIVÉVENSTER</small><h3>Wie wil je nu spreken?</h3><div><button data-w6="Theo">Theo</button><button data-w6="Adrian">Adrian</button><button data-w6="none">Alleen verder</button></div></div>';
+}
+function privateReadyCard(){
+  const w=activeWindow(); if(!w)return '';
+  const active=unlockedFlows().some(id=>{const r=BUILD.phoneFlow.find(x=>x.flow_id===id);return r&&r.character===player.name&&r.window===w});
+  if(!active)return '';
+  const ready=localStorage.getItem('bt-ready-'+w+'-'+key)==='1';
+  return `<div class="readyCard"><b>${ready?'Klaar ✓':'Privévenster '+esc(w)}</b><p>${ready?'Je telefoon blijft bruikbaar terwijl de anderen afronden.':'Rond je huidige gesprek af en markeer daarna dat je klaar bent.'}</p><button id="readyBtn">${ready?'Niet meer klaar':'Ik ben klaar'}</button></div>`;
+}
+function bindWindowControls(){
+  document.querySelectorAll('[data-w6]').forEach(b=>b.onclick=()=>{const st=state();st.w6_route=b.dataset.w6;saveState(st);renderMessages()});
+  const rb=document.getElementById('readyBtn');if(rb)rb.onclick=()=>{const w=activeWindow(),k='bt-ready-'+w+'-'+key;localStorage.setItem(k,localStorage.getItem(k)==='1'?'0':'1');syncChannel?.postMessage({type:'ready',window:w});renderMessages()};
+}
 function renderMessages(){
   const groups=new Map();visibleRows().forEach(r=>{if(!groups.has(r.thread))groups.set(r.thread,[]);groups.get(r.thread).push(r)});
-  app.innerHTML=`${debugBar()}<section class="screen">${topbar('Messages')}<div class="search">Zoek gesprekken</div><div class="threadList">${[...groups].map(([n,rs])=>{const last=rs.at(-1);return `<button class="thread" data-thread="${esc(n)}"><span class="avatar">${esc(n[0])}</span><span><b>${esc(n)}</b><small>${esc(last.opening_text||'')}</small></span><time>${esc(last.visible_timestamp||'')}</time></button>`}).join('')||'<div class="empty">Nog geen gesprekken.</div>'}</div></section>`;
-  document.querySelectorAll('[data-thread]').forEach(b=>b.onclick=()=>renderThread(b.dataset.thread));bindTop();bindDebug();
+  app.innerHTML=`${debugBar()}<section class="screen">${topbar('Messages')}${w6RouteChooser()}<div class="search">Zoek gesprekken</div><div class="threadList">${[...groups].map(([n,rs])=>{const last=rs.at(-1);return `<button class="thread" data-thread="${esc(n)}"><span class="avatar">${esc(n[0])}</span><span><b>${esc(n)}</b><small>${esc(last.opening_text||'')}</small></span><time>${esc(last.visible_timestamp||'')}</time></button>`}).join('')||'<div class="empty">Nog geen gesprekken.</div>'}</div>${privateReadyCard()}</section>`;
+  document.querySelectorAll('[data-thread]').forEach(b=>b.onclick=()=>renderThread(b.dataset.thread));bindWindowControls();bindTop();bindDebug();
 }
 function choiceKey(flow){return 'bt-choice-'+key+'-'+flow}
 function renderThread(name){
@@ -69,7 +98,7 @@ function renderThread(name){
     if((r.state_write||'').includes('theo_engagement+=1'))st.theo_engagement=Number(st.theo_engagement||0)+1;
     if((r.state_write||'').includes('adrian_engagement+=1'))st.adrian_engagement=Number(st.adrian_engagement||0)+1;
     saveState(st);renderThread(name);
-  });bindTop();bindDebug();
+  });bindWindowControls();bindTop();bindDebug();
 }
 function renderPhotos(){app.innerHTML=`${debugBar()}<section class="screen">${topbar('Photos')}<div class="photoGrid">${player.photos.map(([s,c])=>`<figure><img src="${s}"><figcaption>${esc(c)}</figcaption></figure>`).join('')}</div></section>`;bindTop();bindDebug()}
 function renderCalendar(){const items=BUILD.calendar.filter(x=>stageVisible(x.stage));app.innerHTML=`${debugBar()}<section class="screen">${topbar('Calendar')}<div class="calendarList">${items.map(e=>`<article><div class="date">${esc(e.date)}</div><time>${esc(e.time)}</time><h3>${esc(e.title)}</h3><p>${esc(e.location)}</p></article>`).join('')}</div></section>`;bindTop();bindDebug()}
@@ -83,6 +112,6 @@ async function init(){
   try{BUILD=await loadBlackthornBuild();STAGES=BUILD.stageOrder;player=BUILD.players[key]||null;renderHome()}
   catch(e){app.innerHTML=`<div class="loadError"><h1>Blackthorn kon niet laden</h1><p>${esc(e.message)}</p></div>`;console.error(e)}
 }
-window.addEventListener('storage',e=>{if(e.key==='bt-global-stage'&&screen==='home')renderHome()});
+window.addEventListener('storage',e=>{if(['bt-global-stage','bt-global-window','bt-unlocked-flows'].includes(e.key)&&screen==='home')renderHome()});
 syncChannel?.addEventListener('message',e=>{if(e.data?.type==='stage'&&screen==='home')renderHome()});
 init();
