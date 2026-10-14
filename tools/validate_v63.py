@@ -12,7 +12,7 @@ def digest(path):
     return hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
 
 required = [
-    "index.html","app.js","styles.css","runtime-data.js","game-meta.js","asset-map.js","accusation.js",
+    "index.html","app.js","styles.css","runtime-data.js","game-meta.js","evidence-data.js","asset-map.js","accusation.js",
     "projector/index.html","projector/projector.js","projector/styles.css","projector/puzzle-data.js","projector/puzzles.js",
     "production/v63/BLACKTHORN_SCENE_TABLE_V6_3_AUTHORITATIVE_GM_ONLY.csv",
     "production/v63/BLACKTHORN_PHONE_FLOW_V6_3_IMPLEMENTATION_GM_ONLY.csv",
@@ -57,6 +57,8 @@ checks = {
     "hidden accusation protocol": "minority_decision" in read("accusation.js") and "final_elimination" in read("accusation.js") and "final_vote" in read("accusation.js"),
     "finale progression gate": "BlackthornAccusation.isLocked()" in projector and "s.scene_id!=='S26'" in projector,
     "debug-only scene jump": "const DEBUG=" in projector and "id=\"jump\"" in projector,
+    "full evidence artifacts": "BLACKTHORN_EVIDENCE" in read("evidence-data.js") and "legacy_access_export" in read("evidence-data.js") and "swap_minimum_duration" in read("evidence-data.js"),
+    "dossier evidence viewer": "function renderEvidence" in app and "data-evidence" in app,
 }
 for name, ok in checks.items():
     if not ok:
