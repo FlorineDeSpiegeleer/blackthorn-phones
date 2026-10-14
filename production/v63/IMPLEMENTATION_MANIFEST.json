@@ -15,14 +15,14 @@
     }
   },
   "implementation_patches": [
-    "P004B player-visible dance setup",
+    "P004B dance setup",
     "P043T3 typo corrected at runtime",
-    "P043T3/P043A3 timestamp localized to even later",
-    "P011 reaction neutralized to Omdat hij luid was.",
-    "private phone flows unlock only when projector progression reaches them",
-    "opaque GM finale/consequence placeholders never render player-side",
-    "private windows expose explicit ready state",
-    "Maxine B23/W6 route logic uses engagement counters without Theo bias"
+    "P043T3/P043A3 timestamp localized",
+    "P011 neutralized",
+    "phone flows unlock by projector progression",
+    "opaque GM placeholders do not render player-side",
+    "private windows expose ready state",
+    "Maxine B23/W6 route logic uses engagement counters"
   ],
   "technical_lock_pending": [
     "protected opaque finale/consequence source linkage and hashes",
