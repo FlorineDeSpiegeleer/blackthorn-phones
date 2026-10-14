@@ -52,6 +52,8 @@ checks = {
     "interactive P1-P4": "openP1" in read("projector/puzzles.js") and "openP2" in read("projector/puzzles.js") and "openP3" in read("projector/puzzles.js") and "openP4" in read("projector/puzzles.js"),
     "P1 anti-bruteforce": "GETEST DEZE RONDE" in read("projector/puzzles.js") and "VERGELIJKINGSMODUS" in read("projector/puzzles.js"),
     "P4 inspection gate": "mask-inspection" in read("projector/puzzles.js") and "label_remnant" in read("projector/puzzles.js"),
+    "exact engagement scoring": "scoreTheo=new Set(['P013','P016','P035'])" in app and "scoreAdrian=new Set(['P023','P032','P042'])" in app,
+    "neutral waiting tools": "data-wait-app" in app and "geen bewijs-effect" in app,
 }
 for name, ok in checks.items():
     if not ok:
