@@ -49,3 +49,12 @@ button{font:inherit}
 .gm-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.gm-grid button,.gm-grid select{padding:10px;border:1px solid #c8bca9;border-radius:9px;background:white}.gm-grid label{grid-column:1/-1;display:grid;gap:5px;font-size:12px}
 .gm-note{font-size:11px;color:#675e54}.gm-panel kbd{border:1px solid #aaa;border-bottom-width:2px;padding:1px 5px;border-radius:4px;background:#fff}
 @media(max-width:900px){.wrap{padding:28px}.choices,.archive-grid{grid-template-columns:1fr}.details{grid-template-columns:1fr 1fr}.quote{font-size:30px}}
+
+/* V6.3 scene-table additions */
+.bt-lines{display:grid;gap:12px;margin-top:20px}
+.bt-lines .quote{font-size:clamp(20px,2.25vw,32px)}
+.phone-wait,.marker{margin-top:20px;border:1px solid rgba(198,165,106,.35);background:rgba(10,13,18,.72);border-radius:14px;padding:14px 18px;font:700 14px/1.4 var(--sans);letter-spacing:.06em}
+.phone-wait{display:flex;justify-content:space-between;gap:18px}.phone-wait span{font-weight:500;color:var(--muted)}
+.marker.pause{border-color:rgba(255,255,255,.25)}
+.team-card{margin-top:18px}.team-card p{font:16px/1.45 var(--sans);color:#e6dfd6}
+.navChoices{margin-top:20px}.reply-card{margin-top:14px}
