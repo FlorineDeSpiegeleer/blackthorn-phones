@@ -12,11 +12,11 @@ def digest(path):
     return hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
 
 required = [
-    "index.html","app.js","styles.css","runtime-data.js","game-meta.js",
+    "index.html","app.js","styles.css","runtime-data.js","game-meta.js","asset-map.js",
     "projector/index.html","projector/projector.js","projector/styles.css",
     "production/v63/BLACKTHORN_SCENE_TABLE_V6_3_AUTHORITATIVE_GM_ONLY.csv",
     "production/v63/BLACKTHORN_PHONE_FLOW_V6_3_IMPLEMENTATION_GM_ONLY.csv",
-    "production/v63/IMPLEMENTATION_MANIFEST.json"
+    "production/v63/IMPLEMENTATION_MANIFEST.json","production/v63/ASSET_PLAN.json"
 ]
 for path in required:
     if not (ROOT / path).exists():
@@ -36,7 +36,11 @@ runtime = read("runtime-data.js")
 app = read("app.js")
 projector = read("projector/projector.js")
 
+asset_map = read("asset-map.js")
+asset_plan = json.loads(read("production/v63/ASSET_PLAN.json"))
 checks = {
+    "central asset map": "BLACKTHORN_ASSETS" in asset_map and "plannedReplacements" in asset_map,
+    "asset production plan": len(asset_plan.get("create_new", [])) >= 10,
     "dance setup": "Het strijkensemble zet een dans in. Alexander biedt zijn hand." in runtime,
     "P043 typo fix": "DOE ALSOF ER NIETS GEBEURDE" in runtime,
     "localized timestamp": "even later" in runtime,
