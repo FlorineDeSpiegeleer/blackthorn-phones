@@ -1,0 +1,11 @@
+name: Validate Blackthorn V6.3
+on:
+  push:
+    branches:
+      - blackthorn-v2-work
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python tools/validate_v63.py
