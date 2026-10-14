@@ -12,7 +12,7 @@ def digest(path):
     return hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
 
 required = [
-    "index.html","app.js","styles.css","runtime-data.js","game-meta.js","asset-map.js",
+    "index.html","app.js","styles.css","runtime-data.js","game-meta.js","asset-map.js","accusation.js",
     "projector/index.html","projector/projector.js","projector/styles.css","projector/puzzle-data.js","projector/puzzles.js",
     "production/v63/BLACKTHORN_SCENE_TABLE_V6_3_AUTHORITATIVE_GM_ONLY.csv",
     "production/v63/BLACKTHORN_PHONE_FLOW_V6_3_IMPLEMENTATION_GM_ONLY.csv",
@@ -54,6 +54,9 @@ checks = {
     "P4 inspection gate": "mask-inspection" in read("projector/puzzles.js") and "label_remnant" in read("projector/puzzles.js"),
     "exact engagement scoring": "scoreTheo=new Set(['P013','P016','P035'])" in app and "scoreAdrian=new Set(['P023','P032','P042'])" in app,
     "neutral waiting tools": "data-wait-app" in app and "geen bewijs-effect" in app,
+    "hidden accusation protocol": "minority_decision" in read("accusation.js") and "final_elimination" in read("accusation.js") and "final_vote" in read("accusation.js"),
+    "finale progression gate": "BlackthornAccusation.isLocked()" in projector and "s.scene_id!=='S26'" in projector,
+    "debug-only scene jump": "const DEBUG=" in projector and "id=\"jump\"" in projector,
 }
 for name, ok in checks.items():
     if not ok:
