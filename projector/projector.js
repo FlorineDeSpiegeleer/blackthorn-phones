@@ -70,7 +70,12 @@ function bg(s){return '../'+(IMAGES[s.scene_id]||'assets/florine/photos/Rainy-Go
 function progressKey(scene){return 'bt-scene-progress-'+scene}
 function sceneProgress(scene){try{return JSON.parse(localStorage.getItem(progressKey(scene))||'[]')}catch{return[]}}
 function markProgress(scene,label){const s=new Set(sceneProgress(scene));s.add(label);localStorage.setItem(progressKey(scene),JSON.stringify([...s]))}
-function requirementsDone(s){const req=REQUIRED_INTERACTIONS[s.scene_id]||[];const done=new Set(sceneProgress(s.scene_id));return req.every(x=>done.has(x))}
+function requirementsDone(s){
+  const req=REQUIRED_INTERACTIONS[s.scene_id]||[],seen=new Set(sceneProgress(s.scene_id));
+  const base=req.every(x=>seen.has(x));
+  const puzzleOK=!s.puzzle_marker||(window.BlackthornPuzzles&&BlackthornPuzzles.isComplete(s.puzzle_marker));
+  return base&&puzzleOK;
+}
 function save(){localStorage.setItem('bt-proj-scene',String(i))}
 function next(){if(i<SCENES.length-1){i++;save();render()}}
 function prev(){if(i>0){i--;save();render()}}
@@ -90,7 +95,8 @@ function render(){
  ${s.kicker?`<div class="kicker">${esc(s.kicker)}</div>`:''}${s.title?`<h1>${esc(s.title)}</h1>`:''}${safeText(s.player_body)?`<p class="body">${esc(safeText(s.player_body))}</p>`:''}
  ${reactions?`<div class="dialogue">${split(reactions).map(x=>`<p>${esc(x)}</p>`).join('')}</div>`:''}
  ${s.shared_interactions?`<div class="choices">${interactions.map((x,n)=>`<button data-c="${n}">${esc(x.label)}</button>`).join('')}</div>`:''}
- ${caseIds.length?`<button class="sourceButton" id="openSource">OPEN VRIJGEGEVEN BRON</button>`:''}
+ ${caseIds.length&&s.scene_id!=='S24C'?`<button class="sourceButton" id="openSource">OPEN VRIJGEGEVEN BRON</button>`:''}
+ ${s.puzzle_marker&&window.BlackthornPuzzles?BlackthornPuzzles.button(s.puzzle_marker,ready):''}
  ${effectiveWindow(s)&&/^W\d/.test(effectiveWindow(s))?`<div class="tag">PRIVÉVENSTER ${esc(effectiveWindow(s))} · telefoons · ${esc(readyStatus(s))}</div>`:''}
  ${s.scene_id==='S22'&&!resolveB23()?`<div class="tag waiting">MAXINE · ROUTEKEUZE OP TELEFOON</div>`:''}
  ${s.team_task_sequence?`<div class="team"><b>TEAMTAKEN</b>${split(s.team_task_sequence).map(x=>`<p>${esc(x)}</p>`).join('')}</div>`:''}
@@ -110,6 +116,7 @@ function render(){
    else render();
  });
  const src=document.getElementById('openSource');if(src)src.onclick=()=>openSource(caseIds,s.case_key);
+ if(s.puzzle_marker&&window.BlackthornPuzzles)BlackthornPuzzles.bind(s.puzzle_marker,ready,()=>render());
  document.getElementById('prev').onclick=prev;document.getElementById('next').onclick=next;document.getElementById('jump').onchange=e=>{i=+e.target.value;save();render()};
  const clock=document.getElementById('academyClock');if(clock){const seen=sceneProgress('S03').length;clock.textContent=['19:35','19:44','19:57','20:06','20:14'][Math.min(seen,4)]}
 }
