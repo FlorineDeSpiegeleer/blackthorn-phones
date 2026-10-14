@@ -55,7 +55,7 @@ function resolveRoutes(){
 function visibleRows(){
   resolveRoutes();
   const unlocked=new Set(unlockedFlows());
-  return BUILD.phoneFlow.filter(r=>(r.character==='ALL'||r.character===player.name)&&unlocked.has(r.flow_id)&&stageVisible(r.stage)&&condOK(r.condition));
+  return BUILD.phoneFlow.filter(r=>(r.character==='ALL'||r.character===player.name)&&unlocked.has(r.flow_id)&&stageVisible(r.stage)&&condOK(r.condition)&&!/(?:PRIVATE_CONSEQUENCE_BLOCK|FINAL_REVEAL_BLOCK|_GM_\d+)/.test(r.opening_text||''));
 }
 function w6RouteChooser(){
   if(key!=='maxine'||activeWindow()!=='W6')return '';
@@ -71,7 +71,7 @@ function privateReadyCard(){
   return `<div class="readyCard"><b>${ready?'Klaar ✓':'Privévenster '+esc(w)}</b><p>${ready?'Je telefoon blijft bruikbaar terwijl de anderen afronden.':'Rond je huidige gesprek af en markeer daarna dat je klaar bent.'}</p><button id="readyBtn">${ready?'Niet meer klaar':'Ik ben klaar'}</button></div>`;
 }
 function bindWindowControls(){
-  document.querySelectorAll('[data-w6]').forEach(b=>b.onclick=()=>{const st=state();st.w6_route=b.dataset.w6;saveState(st);renderMessages()});
+  document.querySelectorAll('[data-w6]').forEach(b=>b.onclick=()=>{const st=state();st.w6_route=b.dataset.w6;saveState(st);syncChannel?.postMessage({type:'route'});renderMessages()});
   const rb=document.getElementById('readyBtn');if(rb)rb.onclick=()=>{const w=activeWindow(),k='bt-ready-'+w+'-'+key;localStorage.setItem(k,localStorage.getItem(k)==='1'?'0':'1');syncChannel?.postMessage({type:'ready',window:w});renderMessages()};
 }
 function renderMessages(){
@@ -94,7 +94,7 @@ function renderThread(name){
     const r=rows.find(x=>x.flow_id===b.dataset.flow),idx=+b.dataset.i+1,label=r['intent_'+idx],st=state();
     localStorage.setItem(choiceKey(r.flow_id),b.dataset.i);
     if(r.flow_id==='P025')st.hazard_choice=label.startsWith('WACHT')?'A':label.startsWith('BLIJF')?'B':'C';
-    if(r.flow_id==='P036')st.b23_route=label==='THEO'?'Theo':label==='ADRIAN'?'Adrian':'none';
+    if(r.flow_id==='P036'){st.b23_route=label==='THEO'?'Theo':label==='ADRIAN'?'Adrian':'none';syncChannel?.postMessage({type:'route'});}
     if((r.state_write||'').includes('theo_engagement+=1'))st.theo_engagement=Number(st.theo_engagement||0)+1;
     if((r.state_write||'').includes('adrian_engagement+=1'))st.adrian_engagement=Number(st.adrian_engagement||0)+1;
     saveState(st);renderThread(name);
